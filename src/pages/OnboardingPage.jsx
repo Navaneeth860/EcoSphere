@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Bus, 
+  Train, 
   Home, 
   Utensils, 
   ShoppingBag, 
@@ -10,7 +10,8 @@ import {
   ArrowLeft, 
   Check, 
   Sparkles,
-  HelpCircle
+  ArrowRightLeft,
+  Info
 } from 'lucide-react';
 import { useCarbon } from '../context/CarbonContext';
 import { useAuth } from '../context/AuthContext';
@@ -23,17 +24,19 @@ export default function OnboardingPage() {
 
   const [step, setStep] = useState(1);
 
-  // Form state
+  // Form state with separated Going and Coming commute distances
   const [formData, setFormData] = useState({
-    commuteMode: 'bus',
-    commuteDistanceKm: 7,
-    housingType: 'dorm_room',
-    electricityKwh: 120,
-    dietType: 'flexitarian',
-    clothingItemsPerMonth: 2,
+    commuteMode: 'metro',
+    goingDistanceKm: 8,
+    comingDistanceKm: 8,
+    commuteDaysPerWeek: 5,
+    housingType: 'hostel_room',
+    electricityKwh: 65,
+    dietType: 'pure_veg',
+    clothingItemsPerMonth: 1,
     thriftingPref: 'occasional',
-    wasteBagsPerWeek: 2,
-    recyclesRegularly: true
+    wasteBagsPerWeek: 1.5,
+    recyclesRegularly: true // Kabadiwala / raddi recycling
   });
 
   const update = (key, value) => {
@@ -47,14 +50,16 @@ export default function OnboardingPage() {
     
     try {
       confetti({
-        particleCount: 80,
-        spread: 60,
+        particleCount: 90,
+        spread: 65,
         origin: { y: 0.6 }
       });
     } catch (err) {}
 
     navigate('/dashboard');
   };
+
+  const roundTripDistance = Number(formData.goingDistanceKm) + Number(formData.comingDistanceKm);
 
   return (
     <div style={{
@@ -65,7 +70,7 @@ export default function OnboardingPage() {
       alignItems: 'center',
       justifyContent: 'center'
     }}>
-      <div className="card" style={{ maxWidth: '640px', width: '100%', padding: '2.5rem' }}>
+      <div className="card" style={{ maxWidth: '660px', width: '100%', padding: '2.5rem' }}>
         
         {/* Progress header */}
         <div style={{ marginBottom: '2rem' }}>
@@ -74,7 +79,7 @@ export default function OnboardingPage() {
               Step {step} of 5
             </span>
             <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>
-              Student Lifestyle Audit
+              🇮🇳 Indian Student Lifestyle Audit
             </span>
           </div>
 
@@ -88,69 +93,113 @@ export default function OnboardingPage() {
           </div>
         </div>
 
-        {/* STEP 1: TRANSPORTATION */}
+        {/* STEP 1: COMMUTE (GOING & COMING DISTANCES) */}
         {step === 1 && (
           <div className="animate-fade-in">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
               <div style={{ padding: '0.625rem', backgroundColor: '#e0f2fe', color: '#0284c7', borderRadius: '0.75rem' }}>
-                <Bus size={24} />
+                <Train size={24} />
               </div>
               <div>
-                <h3 style={{ fontSize: '1.35rem', color: '#0f172a' }}>Daily Campus Commute</h3>
-                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>How do you normally travel to lectures and labs?</p>
+                <h3 style={{ fontSize: '1.35rem', color: '#0f172a' }}>College Commute & Travel</h3>
+                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>How do you travel between home/hostel and college?</p>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem', marginBottom: '1.5rem' }}>
+            {/* Mode selection based on India GHG Program Road Transport */}
+            <label className="form-label" style={{ marginBottom: '0.5rem' }}>Select Main Travel Mode:</label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.625rem', marginBottom: '1.5rem' }}>
               {[
-                { id: 'walking', label: 'Walking / Foot', desc: '0 kg CO₂e (Cleanest)', icon: '🚶' },
-                { id: 'bicycle', label: 'Bicycle / Non-electric', desc: '0 kg CO₂e (Cleanest)', icon: '🚲' },
-                { id: 'bus', label: 'Campus / City Bus', desc: '0.089 kg CO₂e/km', icon: '🚌' },
-                { id: 'metro', label: 'Metro / Subway', desc: '0.035 kg CO₂e/km', icon: '🚇' },
-                { id: 'carpool', label: 'Carpool with peers', desc: '0.096 kg CO₂e/km', icon: '👥' },
-                { id: 'car_gasoline', label: 'Personal Car (Solo)', desc: '0.192 kg CO₂e/km', icon: '🚗' },
+                { id: 'metro', label: 'Metro Rail (DMRC/Namma)', desc: '0.0125 kg CO₂/pax-km', icon: '🚇' },
+                { id: 'bus_city', label: 'City Bus (DTC/BEST/BMTC)', desc: '0.0152 kg CO₂/pax-km (Govt Factor)', icon: '🚌' },
+                { id: 'scooter_petrol', label: 'Petrol Scooter (Activa/Jupiter)', desc: '0.0368 kg CO₂/km (India GHG)', icon: '🛵' },
+                { id: 'bike_100cc', label: 'Motorcycle (Splendor/Platina)', desc: '0.0358 kg CO₂/km (India GHG)', icon: '🏍️' },
+                { id: 'auto_cng', label: 'Auto Rickshaw (CNG)', desc: '0.1077 kg CO₂/km (India GHG)', icon: '🛺' },
+                { id: 'local_train', label: 'Local Suburban Train', desc: '0.009 kg CO₂/pax-km (Low Carbon)', icon: '🚆' },
+                { id: 'bicycle', label: 'Cycle / Walking', desc: '0.00 kg CO₂ (Cleanest)', icon: '🚲' },
+                { id: 'car_hatchback_petrol', label: 'Car (Swift/i10/Santro)', desc: '0.127 kg CO₂/km (India GHG)', icon: '🚗' },
               ].map(item => (
                 <button
                   type="button"
                   key={item.id}
                   onClick={() => update('commuteMode', item.id)}
                   style={{
-                    padding: '0.875rem',
+                    padding: '0.75rem',
                     borderRadius: '0.75rem',
                     border: `2px solid ${formData.commuteMode === item.id ? '#059669' : '#e2e8f0'}`,
                     backgroundColor: formData.commuteMode === item.id ? '#ecfdf5' : '#ffffff',
                     textAlign: 'left',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.15s'
                   }}
                 >
-                  <div style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>{item.icon}</div>
-                  <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0f172a' }}>{item.label}</div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{item.desc}</div>
+                  <div style={{ fontSize: '1.2rem', marginBottom: '0.2rem' }}>{item.icon}</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#0f172a' }}>{item.label}</div>
+                  <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{item.desc}</div>
                 </button>
               ))}
             </div>
 
-            <div className="form-group">
-              <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>One-way commute distance:</span>
-                <span style={{ color: '#059669', fontWeight: 700 }}>{formData.commuteDistanceKm} km</span>
-              </label>
-              <input
-                type="range"
-                min="1"
-                max="30"
-                value={formData.commuteDistanceKm}
-                onChange={(e) => update('commuteDistanceKm', Number(e.target.value))}
-                style={{ width: '100%', accentColor: '#059669' }}
-              />
-              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                (Assuming 180 semester commute days per academic year)
-              </span>
+            {/* SEPARATED GOING AND COMING DISTANCE CONTROLS */}
+            <div style={{
+              backgroundColor: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderRadius: '0.75rem',
+              padding: '1.25rem',
+              marginBottom: '1rem'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: '#0f172a', fontWeight: 700, fontSize: '0.95rem' }}>
+                <ArrowRightLeft size={16} color="#059669" /> Daily Commute Distances (Going & Coming)
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+                {/* Going Distance */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '0.375rem' }}>
+                    <span>Going to College:</span>
+                    <strong style={{ color: '#059669' }}>{formData.goingDistanceKm} km</strong>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.5"
+                    max="40"
+                    step="0.5"
+                    value={formData.goingDistanceKm}
+                    onChange={(e) => update('goingDistanceKm', Number(e.target.value))}
+                    style={{ width: '100%', accentColor: '#059669' }}
+                  />
+                </div>
+
+                {/* Coming Distance */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', fontWeight: 600, color: '#334155', marginBottom: '0.375rem' }}>
+                    <span>Coming Back (Return):</span>
+                    <strong style={{ color: '#059669' }}>{formData.comingDistanceKm} km</strong>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.5"
+                    max="40"
+                    step="0.5"
+                    value={formData.comingDistanceKm}
+                    onChange={(e) => update('comingDistanceKm', Number(e.target.value))}
+                    style={{ width: '100%', accentColor: '#059669' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginTop: '0.75rem', fontSize: '0.8125rem', color: '#475569', display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #e2e8f0', paddingTop: '0.5rem' }}>
+                <span>Total Round-Trip: <strong>{roundTripDistance} km / day</strong></span>
+                <span style={{ color: '#059669', fontWeight: 600 }}>5 Days / Week</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', color: '#64748b' }}>
+              <Info size={14} color="#059669" /> Emission factors sourced directly from Govt of India & India GHG Program (2015).
             </div>
           </div>
         )}
 
-        {/* STEP 2: HOUSING & ELECTRICITY */}
+        {/* STEP 2: HOSTEL / PG / APARTMENT ELECTRICITY */}
         {step === 2 && (
           <div className="animate-fade-in">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
@@ -158,16 +207,17 @@ export default function OnboardingPage() {
                 <Home size={24} />
               </div>
               <div>
-                <h3 style={{ fontSize: '1.35rem', color: '#0f172a' }}>Housing & Power</h3>
-                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>Where do you reside during the term?</p>
+                <h3 style={{ fontSize: '1.35rem', color: '#0f172a' }}>Hostel / PG & Electricity</h3>
+                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>Where do you stay during college semesters?</p>
               </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
               {[
-                { id: 'dorm_room', title: 'On-Campus Dorm Room', desc: 'Average ~120 kWh/month allocated per student', kwh: 120 },
-                { id: 'shared_apt', title: 'Off-Campus Shared Apartment', desc: 'Average ~210 kWh/month your personal share', kwh: 210 },
-                { id: 'studio_apt', title: 'Private Studio Apartment', desc: 'Average ~280 kWh/month independent usage', kwh: 280 },
+                { id: 'hostel_room', title: 'College Hostel Room (Non-AC)', desc: 'Ceiling fan, LED tubelight, laptop charging (~65 kWh/mo)', kwh: 65 },
+                { id: 'hostel_ac_room', title: 'Hostel Room with Air Conditioner', desc: 'Summer cooler / AC in peak months (~140 kWh/mo)', kwh: 140 },
+                { id: 'pg_sharing', title: 'Shared PG (Paying Guest Flat)', desc: 'Fridge share, geyser, study room (~90 kWh/mo personal share)', kwh: 90 },
+                { id: 'independent_flat', title: 'Rented 1BHK / 2BHK Apartment', desc: 'Kitchen appliances, induction, shared utilities (~180 kWh/mo)', kwh: 180 },
               ].map(h => (
                 <div
                   key={h.id}
@@ -193,20 +243,23 @@ export default function OnboardingPage() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Estimated Monthly Power Usage: {formData.electricityKwh} kWh</label>
+              <label className="form-label">Estimated Monthly Units (kWh): {formData.electricityKwh} units</label>
               <input
                 type="range"
-                min="50"
-                max="400"
+                min="30"
+                max="250"
                 value={formData.electricityKwh}
                 onChange={(e) => update('electricityKwh', Number(e.target.value))}
                 style={{ width: '100%', accentColor: '#059669' }}
               />
+              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                Computed using Central Electricity Authority (CEA) India grid factor (0.720 kg CO₂/kWh).
+              </span>
             </div>
           </div>
         )}
 
-        {/* STEP 3: FOOD & DINING */}
+        {/* STEP 3: DESI FOOD & MESS HABITS */}
         {step === 3 && (
           <div className="animate-fade-in">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
@@ -214,18 +267,18 @@ export default function OnboardingPage() {
                 <Utensils size={24} />
               </div>
               <div>
-                <h3 style={{ fontSize: '1.35rem', color: '#0f172a' }}>Dining Habits</h3>
-                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>What best characterizes your daily diet?</p>
+                <h3 style={{ fontSize: '1.35rem', color: '#0f172a' }}>Mess & Food Habits</h3>
+                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>What is your typical diet pattern at the hostel/canteen?</p>
               </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {[
-                { id: 'vegan', title: '100% Plant-Based (Vegan)', factor: '1.5 kg CO₂e / day', desc: 'Lowest footprint diet' },
-                { id: 'vegetarian', title: 'Vegetarian (Dairy & Eggs)', factor: '2.5 kg CO₂e / day', desc: 'No meat or poultry' },
-                { id: 'pescatarian', title: 'Pescatarian', factor: '3.2 kg CO₂e / day', desc: 'Fish and vegetables' },
-                { id: 'flexitarian', title: 'Flexitarian / Low Meat', factor: '3.8 kg CO₂e / day', desc: 'Meat a few times a week' },
-                { id: 'high_meat', title: 'Daily Meat / High Beef', factor: '7.2 kg CO₂e / day', desc: 'Meat in most daily meals' }
+                { id: 'pure_veg', title: 'Traditional Indian Vegetarian Thali', factor: '1.8 kg CO₂e / day', desc: 'Roti, Dal, Seasonal Sabzi, Rice, Dahi/Paneer' },
+                { id: 'jain_veg', title: 'Jain Vegetarian', factor: '1.6 kg CO₂e / day', desc: 'Plant crops, lentils, dairy without underground roots' },
+                { id: 'vegan_indian', title: '100% Plant-Based Vegan', factor: '1.3 kg CO₂e / day', desc: 'No cow milk, dahi, or ghee (lowest emissions)' },
+                { id: 'occasional_nonveg', title: 'Eggitarian / Weekend Non-Veg', factor: '2.9 kg CO₂e / day', desc: 'Eggs daily or chicken once/twice a week' },
+                { id: 'regular_nonveg', title: 'Regular Non-Vegetarian', factor: '4.8 kg CO₂e / day', desc: 'Chicken/Mutton/Fish in most lunch & dinner meals' }
               ].map(f => (
                 <div
                   key={f.id}
@@ -249,7 +302,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 4: SHOPPING & GOODS */}
+        {/* STEP 4: SHOPPING & TEXTILES */}
         {step === 4 && (
           <div className="animate-fade-in">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
@@ -257,15 +310,15 @@ export default function OnboardingPage() {
                 <ShoppingBag size={24} />
               </div>
               <div>
-                <h3 style={{ fontSize: '1.35rem', color: '#0f172a' }}>Shopping & Wardrobe</h3>
-                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>Apparel purchasing and thrift habits</p>
+                <h3 style={{ fontSize: '1.35rem', color: '#0f172a' }}>Clothing & Shopping</h3>
+                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>Wardrobe purchasing and thrift market habits</p>
               </div>
             </div>
 
             <div className="form-group" style={{ marginBottom: '1.5rem' }}>
               <label className="form-label">Average new garments purchased per month:</label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {[0, 1, 2, 4, 6].map(num => (
+                {[0, 1, 2, 4].map(num => (
                   <button
                     key={num}
                     type="button"
@@ -280,28 +333,28 @@ export default function OnboardingPage() {
                       fontWeight: 700
                     }}
                   >
-                    {num === 0 ? '0 (Thrift/None)' : `${num}`}
+                    {num === 0 ? '0 (Flea/Thrift)' : `${num}`}
                   </button>
                 ))}
               </div>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Thrifting & Secondhand Preference</label>
+              <label className="form-label">Thrifting & Local Flea Market Habits (Sarojini / Janpath / Street)</label>
               <select
                 value={formData.thriftingPref}
                 onChange={(e) => update('thriftingPref', e.target.value)}
                 className="form-select"
               >
-                <option value="mostly_thrift">Mostly Thrifted / Vintage / Swapped (Low Carbon)</option>
-                <option value="occasional">Occasional Thrifting (Mixed)</option>
-                <option value="mostly_new">Primarily New / Brand Retail Stores</option>
+                <option value="mostly_thrift">Frequently thrift / borrow / swap (Low Carbon)</option>
+                <option value="occasional">Mix of local street shops and retail malls</option>
+                <option value="mostly_new">Fast fashion brands (Zara, H&M, Myntra)</option>
               </select>
             </div>
           </div>
         )}
 
-        {/* STEP 5: WASTE & RECYCLING */}
+        {/* STEP 5: WASTE & KABADIWALA DIVERSION */}
         {step === 5 && (
           <div className="animate-fade-in">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
@@ -309,15 +362,15 @@ export default function OnboardingPage() {
                 <Trash2 size={24} />
               </div>
               <div>
-                <h3 style={{ fontSize: '1.35rem', color: '#0f172a' }}>Waste & Diversion</h3>
-                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>Recycling and waste disposal routines</p>
+                <h3 style={{ fontSize: '1.35rem', color: '#0f172a' }}>Waste & Raddi / Kabadiwala</h3>
+                <p style={{ fontSize: '0.875rem', color: '#64748b' }}>Hostel waste disposal and scrap recycling</p>
               </div>
             </div>
 
             <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-              <label className="form-label">Trash bags produced weekly (Standard dorm/apt bin):</label>
+              <label className="form-label">Weekly dustbin bag count produced:</label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {[1, 2, 3, 5].map(bags => (
+                {[1, 2, 3].map(bags => (
                   <button
                     key={bags}
                     type="button"
@@ -326,7 +379,7 @@ export default function OnboardingPage() {
                       flex: 1,
                       padding: '0.625rem',
                       borderRadius: '0.5rem',
-                      border: `1px solid ${formData.wasteBagsPerWeek === bags ? '#059669' : '#e2e8f0'}`,
+                      border: `1px solid={formData.wasteBagsPerWeek === bags ? '#059669' : '#e2e8f0'}`,
                       backgroundColor: formData.wasteBagsPerWeek === bags ? '#ecfdf5' : '#ffffff',
                       color: formData.wasteBagsPerWeek === bags ? '#059669' : '#475569',
                       fontWeight: 700
@@ -349,10 +402,10 @@ export default function OnboardingPage() {
             }}>
               <div>
                 <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.9375rem' }}>
-                  Do you routinely sort paper, plastic & cans?
+                  Do you give paper, exam notes & plastic to the Kabadiwala / Raddi?
                 </div>
                 <div style={{ fontSize: '0.8125rem', color: '#64748b' }}>
-                  Cuts landfill methane and virgin production impact by ~40%
+                  Recycles virgin material and keeps landfill emissions down by 60%
                 </div>
               </div>
               <input
@@ -397,9 +450,8 @@ export default function OnboardingPage() {
               type="button"
               onClick={handleFinish}
               className="btn-primary"
-              style={{ backgroundColor: '#059669' }}
             >
-              <Sparkles size={16} /> Generate My Footprint Hub
+              <Sparkles size={16} /> Compute My Indian Student Footprint
             </button>
           )}
         </div>

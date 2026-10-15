@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Leaf, 
+  Globe2, 
   LayoutDashboard, 
   Activity, 
   Sliders, 
@@ -9,7 +9,6 @@ import {
   Target, 
   ShieldCheck, 
   LogOut, 
-  User, 
   Menu, 
   X 
 } from 'lucide-react';
@@ -52,7 +51,7 @@ export default function Navbar() {
     }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '4.25rem' }}>
         
-        {/* Logo */}
+        {/* Brand Logo */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', textDecoration: 'none' }}>
           <div style={{
             width: '2.5rem',
@@ -65,14 +64,14 @@ export default function Navbar() {
             justifyContent: 'center',
             boxShadow: '0 2px 4px rgba(5, 150, 105, 0.15)'
           }}>
-            <Leaf size={22} strokeWidth={2.5} />
+            <Globe2 size={22} strokeWidth={2.3} />
           </div>
           <div>
             <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>
-              Green<span style={{ color: '#059669' }}>Track</span>
+              Eco<span style={{ color: '#059669' }}>Sphere</span>
             </span>
-            <span style={{ display: 'block', fontSize: '0.65rem', fontWeight: 600, color: '#64748b', letterSpacing: '0.05em', textTransform: 'uppercase', marginTop: '-2px' }}>
-              Student Eco Hub
+            <span style={{ display: 'block', fontSize: '0.62rem', fontWeight: 700, color: '#059669', letterSpacing: '0.05em', textTransform: 'uppercase', marginTop: '-2px' }}>
+              🇮🇳 India Student Climate Hub
             </span>
           </div>
         </Link>
@@ -120,8 +119,8 @@ export default function Navbar() {
                   <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.2 }}>
                     {currentUser.name}
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                    {currentUser.role === 'admin' ? 'Campus Admin' : 'Student'}
+                  <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                    {currentUser.role === 'admin' ? 'Campus Sustainability Dean' : 'IIT Delhi Student'}
                   </div>
                 </div>
               </div>
@@ -148,7 +147,7 @@ export default function Navbar() {
                 Log In
               </Link>
               <Link to="/register" className="btn-primary" style={{ padding: '0.5rem 1.125rem', fontSize: '0.875rem' }}>
-                Get Started Free
+                Get Started
               </Link>
             </div>
           )}
@@ -232,14 +231,13 @@ export default function Navbar() {
                 Log In
               </Link>
               <Link to="/register" onClick={() => setMobileMenuOpen(false)} className="btn-primary" style={{ textAlign: 'center', justifyContent: 'center' }}>
-                Create Free Student Account
+                Create Student Account
               </Link>
             </div>
           )}
         </div>
       )}
 
-      {/* Media query styling inline helper */}
       <style>{`
         @media (min-width: 860px) {
           .desktop-nav { display: flex !important; }

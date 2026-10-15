@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Leaf, Lock, Mail, ArrowRight, UserCheck } from 'lucide-react';
+import { Globe2, Lock, Mail, ArrowRight, UserCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
@@ -22,12 +22,12 @@ export default function LoginPage() {
   };
 
   const handleQuickDemoStudent = () => {
-    login('alex.rivera@campus.edu', 'demo123', 'student');
+    login('aarav.sharma@iitd.ac.in', 'demo123', 'student');
     navigate('/dashboard');
   };
 
   const handleQuickDemoAdmin = () => {
-    login('sustainability@campus.edu', 'admin123', 'admin');
+    login('sustainability@iitd.ac.in', 'admin123', 'admin');
     navigate('/admin');
   };
 
@@ -42,7 +42,6 @@ export default function LoginPage() {
     }}>
       <div className="card" style={{ maxWidth: '440px', width: '100%', padding: '2.5rem' }}>
         
-        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
             width: '3rem',
@@ -55,11 +54,11 @@ export default function LoginPage() {
             justifyContent: 'center',
             marginBottom: '1rem'
           }}>
-            <Leaf size={24} />
+            <Globe2 size={24} />
           </div>
-          <h2 style={{ fontSize: '1.75rem', color: '#0f172a', marginBottom: '0.5rem' }}>Welcome Back</h2>
+          <h2 style={{ fontSize: '1.75rem', color: '#0f172a', marginBottom: '0.5rem' }}>EcoSphere Login</h2>
           <p style={{ fontSize: '0.875rem', color: '#64748b' }}>
-            Sign in to track your carbon footprint & progress
+            Sign in to track your college & hostel carbon footprint
           </p>
         </div>
 
@@ -77,7 +76,6 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={handleSubmit}>
-          {/* Role selector */}
           <div className="form-group">
             <label className="form-label">Sign in as:</label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
@@ -115,14 +113,14 @@ export default function LoginPage() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">University Email</label>
+            <label className="form-label">College Email ID</label>
             <div style={{ position: 'relative' }}>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={role === 'admin' ? 'admin@campus.edu' : 'student@campus.edu'}
+                placeholder={role === 'admin' ? 'dean.sustainability@iitd.ac.in' : 'student@iitd.ac.in'}
                 className="form-input"
                 style={{ paddingLeft: '2.5rem' }}
               />
@@ -151,7 +149,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Quick Demo Logins for Pair Programming evaluation */}
         <div style={{ marginTop: '1.75rem', paddingTop: '1.5rem', borderTop: '1px solid #f1f5f9' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem', textAlign: 'center' }}>
             One-Click Instant Demos
@@ -163,7 +160,7 @@ export default function LoginPage() {
               className="btn-soft"
               style={{ width: '100%', justifyContent: 'center', fontSize: '0.8125rem' }}
             >
-              <UserCheck size={16} /> Load Active Student (Alex Rivera)
+              <UserCheck size={16} /> Load Indian Student (Aarav Sharma - IIT Delhi)
             </button>
             <button
               type="button"
@@ -171,13 +168,13 @@ export default function LoginPage() {
               className="btn-secondary"
               style={{ width: '100%', justifyContent: 'center', fontSize: '0.8125rem' }}
             >
-              Load Campus Sustainability Director
+              Load Campus Sustainability Dean
             </button>
           </div>
         </div>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: '#64748b' }}>
-          New to GreenTrack?{' '}
+          New to EcoSphere?{' '}
           <Link to="/register" style={{ color: '#059669', fontWeight: 600 }}>
             Create an account
           </Link>

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Leaf, User, Mail, Lock, School, ArrowRight } from 'lucide-react';
+import { Globe2, User, Mail, Lock, School, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [university, setUniversity] = useState('Greenfield State University');
+  const [university, setUniversity] = useState('Indian Institute of Technology (IIT Delhi)');
   const [role, setRole] = useState('student');
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -41,13 +41,13 @@ export default function RegisterPage() {
             justifyContent: 'center',
             marginBottom: '1rem'
           }}>
-            <Leaf size={24} />
+            <Globe2 size={24} />
           </div>
           <h2 style={{ fontSize: '1.75rem', color: '#0f172a', marginBottom: '0.5rem' }}>
-            Join GreenTrack
+            Join EcoSphere
           </h2>
           <p style={{ fontSize: '0.875rem', color: '#64748b' }}>
-            Calculate your student carbon footprint in under 2 minutes
+            Calculate your Indian college carbon footprint in under 2 minutes
           </p>
         </div>
 
@@ -60,7 +60,7 @@ export default function RegisterPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Jordan Smith"
+                placeholder="e.g. Aarav Sharma / Ananya Patel"
                 className="form-input"
                 style={{ paddingLeft: '2.5rem' }}
               />
@@ -69,14 +69,14 @@ export default function RegisterPage() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">University Email (.edu)</label>
+            <label className="form-label">College Email ID (.ac.in / .edu.in)</label>
             <div style={{ position: 'relative' }}>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@university.edu"
+                placeholder="student@iitd.ac.in"
                 className="form-input"
                 style={{ paddingLeft: '2.5rem' }}
               />
@@ -85,13 +85,14 @@ export default function RegisterPage() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">University / College</label>
+            <label className="form-label">College / Institute</label>
             <div style={{ position: 'relative' }}>
               <input
                 type="text"
                 required
                 value={university}
                 onChange={(e) => setUniversity(e.target.value)}
+                placeholder="e.g. IIT Delhi, BITS Pilani, NIT Trichy, Delhi University"
                 className="form-input"
                 style={{ paddingLeft: '2.5rem' }}
               />
@@ -116,12 +117,12 @@ export default function RegisterPage() {
           </div>
 
           <button type="submit" className="btn-primary" style={{ width: '100%', padding: '0.75rem', marginTop: '0.75rem' }}>
-            Continue to Baseline Survey <ArrowRight size={16} />
+            Start College Baseline Survey <ArrowRight size={16} />
           </button>
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: '#64748b' }}>
-          Already have an account?{' '}
+          Already registered?{' '}
           <Link to="/login" style={{ color: '#059669', fontWeight: 600 }}>
             Sign in
           </Link>

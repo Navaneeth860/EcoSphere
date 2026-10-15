@@ -1,35 +1,39 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Leaf, 
+  Globe2, 
   ArrowRight, 
   Calculator, 
   Sparkles, 
-  Sliders, 
-  ShieldCheck, 
   CheckCircle2, 
   TrendingDown, 
-  BarChart3, 
-  Users, 
-  Award,
-  Zap,
+  Train,
   Bus,
-  Utensils
+  Utensils,
+  Zap,
+  ShoppingBag,
+  Sliders,
+  ShieldCheck,
+  ArrowRightLeft
 } from 'lucide-react';
-import { EMISSION_FACTORS } from '../services/carbonEngine';
+import { INDIA_EMISSION_FACTORS } from '../services/carbonEngine';
 
 export default function LandingPage() {
-  // Interactive mini-calculator states for quick hero preview
-  const [commuteDays, setCommuteDays] = useState(4);
-  const [commuteMode, setCommuteMode] = useState('bus');
-  const [dietChoice, setDietChoice] = useState('flexitarian');
+  // Going and Coming commute states
+  const [goingKm, setGoingKm] = useState(8);
+  const [comingKm, setComingKm] = useState(8);
+  const [commuteDays, setCommuteDays] = useState(5);
+  const [commuteMode, setCommuteMode] = useState('metro');
+  const [dietChoice, setDietChoice] = useState('pure_veg');
 
-  // Preview estimation calculation
-  const calculatedEstimate = Math.round(
-    (commuteDays * 12 * (EMISSION_FACTORS.transport[commuteMode]?.factor || 0.089) * 36) +
-    (EMISSION_FACTORS.food[dietChoice]?.factor || 3.8) * 365 +
-    750 // dorm electricity & shopping baseline
-  );
+  // Preview estimation calculation using India GHG Program factors
+  const roundTripKm = goingKm + comingKm;
+  const transportFactor = INDIA_EMISSION_FACTORS.transport[commuteMode]?.factor || 0.0125;
+  const annualCommuteKg = roundTripKm * transportFactor * (commuteDays * 36);
+  const annualDietKg = (INDIA_EMISSION_FACTORS.food[dietChoice]?.factor || 1.8) * 365;
+  const annualHostelAndOtherKg = 560 + 50 + 30; // CEA 65 kWh/mo + desi shopping/waste baseline
+
+  const calculatedEstimate = Math.round(annualCommuteKg + annualDietKg + annualHostelAndOtherKg);
 
   return (
     <div className="animate-fade-in">
@@ -63,7 +67,7 @@ export default function LandingPage() {
                 fontWeight: 700,
                 marginBottom: '1.5rem'
               }}>
-                <Sparkles size={16} /> Campus Climate Action Platform
+                <Sparkles size={16} /> 🇮🇳 India GHG Program & CEA Certified Factors
               </div>
 
               <h1 style={{
@@ -74,7 +78,7 @@ export default function LandingPage() {
               }}>
                 Track your carbon footprint. <br />
                 <span style={{ color: '#059669', background: 'linear-gradient(90deg, #059669, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                  Live sustainably on campus.
+                  Built for Indian Colleges.
                 </span>
               </h1>
 
@@ -85,28 +89,28 @@ export default function LandingPage() {
                 marginBottom: '2rem',
                 maxWidth: '540px'
               }}>
-                GreenTrack gives university students deterministic GHG-protocol carbon calculations, personalized AI reduction coaching, and interactive what-if lifestyle simulations.
+                <strong>EcoSphere</strong> gives students across Indian universities (IITs, NITs, DU, BITS, State Colleges) precision carbon tracking powered by official <strong>Govt of India (WRI / TERI / CII)</strong> road transport factors and <strong>Central Electricity Authority (CEA)</strong> grid figures.
               </p>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem' }}>
                 <Link to="/register" className="btn-primary" style={{ padding: '0.875rem 1.75rem', fontSize: '1rem' }}>
-                  Start Your Footprint Audit <ArrowRight size={18} />
+                  Start 2-Min College Audit <ArrowRight size={18} />
                 </Link>
                 <Link to="/dashboard" className="btn-secondary" style={{ padding: '0.875rem 1.5rem', fontSize: '1rem' }}>
-                  Explore Demo Student Hub
+                  View Demo Student Hub
                 </Link>
               </div>
 
               {/* Trust Badges */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', fontSize: '0.875rem', color: '#64748b' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                  <CheckCircle2 size={16} color="#059669" /> DEFRA & EPA Verified Data
+                  <CheckCircle2 size={16} color="#059669" /> India GHG Program (WRI/CII)
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                  <CheckCircle2 size={16} color="#059669" /> Zero Private Data Shared
+                  <CheckCircle2 size={16} color="#059669" /> CEA India Power Grid Verified
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                  <CheckCircle2 size={16} color="#059669" /> Free for All Students
+                  <CheckCircle2 size={16} color="#059669" /> Metro, Bus, Auto & Hostel Ready
                 </span>
               </div>
             </div>
@@ -134,42 +138,44 @@ export default function LandingPage() {
                   letterSpacing: '0.05em',
                   textTransform: 'uppercase'
                 }}>
-                  Instant Preview
+                  India Specific Calculator
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
                   <Calculator size={20} color="#059669" />
-                  <h3 style={{ fontSize: '1.2rem', color: '#0f172a' }}>Quick Student Carbon Estimator</h3>
+                  <h3 style={{ fontSize: '1.2rem', color: '#0f172a' }}>College Footprint Quick Estimator</h3>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
-                  {/* Commute Mode */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.25rem' }}>
+                  
+                  {/* Transport Mode */}
                   <div>
                     <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', marginBottom: '0.375rem' }}>
-                      Primary Commute Method
+                      Primary Commute Mode (India GHG Factors)
                     </label>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.375rem' }}>
                       {[
-                        { id: 'bicycle', label: 'Bike / Walk', icon: '🚲' },
-                        { id: 'bus', label: 'Transit Bus', icon: '🚌' },
-                        { id: 'car_gasoline', label: 'Solo Car', icon: '🚗' },
+                        { id: 'metro', label: 'Metro Rail', icon: '🚇' },
+                        { id: 'bus_city', label: 'City Bus', icon: '🚌' },
+                        { id: 'scooter_petrol', label: 'Activa/Scooter', icon: '🛵' },
+                        { id: 'auto_cng', label: 'Auto (CNG)', icon: '🛺' },
                       ].map((item) => (
                         <button
                           key={item.id}
                           type="button"
                           onClick={() => setCommuteMode(item.id)}
                           style={{
-                            padding: '0.5rem',
+                            padding: '0.5rem 0.25rem',
                             borderRadius: '0.5rem',
                             border: `1px solid ${commuteMode === item.id ? '#059669' : '#e2e8f0'}`,
                             backgroundColor: commuteMode === item.id ? '#ecfdf5' : '#ffffff',
                             color: commuteMode === item.id ? '#059669' : '#475569',
                             fontWeight: 600,
-                            fontSize: '0.8125rem',
+                            fontSize: '0.75rem',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
-                            gap: '0.25rem'
+                            gap: '0.2rem'
                           }}
                         >
                           <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
@@ -179,26 +185,53 @@ export default function LandingPage() {
                     </div>
                   </div>
 
-                  {/* Commute Days Slider */}
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', marginBottom: '0.25rem' }}>
-                      <span>Campus Commute Days</span>
-                      <span style={{ color: '#059669' }}>{commuteDays} days / week</span>
+                  {/* Going and Coming Distance Sliders */}
+                  <div style={{ backgroundColor: '#f8fafc', padding: '0.875rem', borderRadius: '0.75rem', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.5rem' }}>
+                      <ArrowRightLeft size={14} color="#059669" /> Daily Commute (Going & Coming)
                     </div>
-                    <input
-                      type="range"
-                      min="1"
-                      max="7"
-                      value={commuteDays}
-                      onChange={(e) => setCommuteDays(Number(e.target.value))}
-                      style={{ width: '100%', accentColor: '#059669' }}
-                    />
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#475569' }}>
+                          <span>Going:</span>
+                          <strong style={{ color: '#059669' }}>{goingKm} km</strong>
+                        </div>
+                        <input
+                          type="range"
+                          min="1"
+                          max="30"
+                          value={goingKm}
+                          onChange={(e) => setGoingKm(Number(e.target.value))}
+                          style={{ width: '100%', accentColor: '#059669' }}
+                        />
+                      </div>
+
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#475569' }}>
+                          <span>Coming:</span>
+                          <strong style={{ color: '#059669' }}>{comingKm} km</strong>
+                        </div>
+                        <input
+                          type="range"
+                          min="1"
+                          max="30"
+                          value={comingKm}
+                          onChange={(e) => setComingKm(Number(e.target.value))}
+                          style={{ width: '100%', accentColor: '#059669' }}
+                        />
+                      </div>
+                    </div>
+
+                    <div style={{ textAlign: 'right', fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+                      Round-trip: <strong>{roundTripKm} km/day</strong>
+                    </div>
                   </div>
 
                   {/* Diet Choice */}
                   <div>
                     <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: '#475569', marginBottom: '0.375rem' }}>
-                      Dietary Pattern
+                      Hostel Mess / Diet Habit
                     </label>
                     <select
                       value={dietChoice}
@@ -206,10 +239,11 @@ export default function LandingPage() {
                       className="form-select"
                       style={{ fontSize: '0.875rem', padding: '0.5rem 0.75rem' }}
                     >
-                      <option value="vegan">Vegan (100% Plant-Based)</option>
-                      <option value="vegetarian">Vegetarian (Dairy & Eggs)</option>
-                      <option value="flexitarian">Flexitarian (Low Meat)</option>
-                      <option value="high_meat">High Meat Consumption</option>
+                      <option value="pure_veg">Indian Vegetarian (Dal, Roti, Sabzi, Rice, Dahi)</option>
+                      <option value="jain_veg">Jain Vegetarian</option>
+                      <option value="vegan_indian">100% Plant-Based Vegan</option>
+                      <option value="occasional_nonveg">Eggitarian / Occasional Chicken (1-2x/week)</option>
+                      <option value="regular_nonveg">Regular Non-Vegetarian (Chicken/Mutton)</option>
                     </select>
                   </div>
                 </div>
@@ -223,23 +257,23 @@ export default function LandingPage() {
                   textAlign: 'center'
                 }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#166534', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Estimated Annual Footprint
+                    Estimated Academic Year Footprint
                   </div>
                   <div style={{ fontSize: '2.5rem', fontWeight: 800, color: '#059669', margin: '0.25rem 0' }}>
                     {calculatedEstimate.toLocaleString()} <span style={{ fontSize: '1rem', fontWeight: 600 }}>kg CO₂e / yr</span>
                   </div>
                   <div style={{ fontSize: '0.8125rem', color: '#15803d' }}>
-                    {calculatedEstimate < 3200 ? (
-                      <span>🌿 <strong>{Math.round(3200 - calculatedEstimate)} kg lower</strong> than campus average (3,200 kg)</span>
+                    {calculatedEstimate < 1850 ? (
+                      <span>🌿 <strong>{Math.round(1850 - calculatedEstimate)} kg lower</strong> than Indian student avg (1,850 kg)</span>
                     ) : (
-                      <span>⚠️ <strong>{Math.round(calculatedEstimate - 3200)} kg higher</strong> than campus average. High potential for reduction!</span>
+                      <span>⚠️ <strong>{Math.round(calculatedEstimate - 1850)} kg higher</strong> than Indian student avg. Good reduction scope!</span>
                     )}
                   </div>
                 </div>
 
                 <div style={{ textAlign: 'center', marginTop: '1rem' }}>
                   <Link to="/onboarding" style={{ fontSize: '0.875rem', color: '#059669', fontWeight: 600, textDecoration: 'underline' }}>
-                    Take the complete 2-minute baseline survey →
+                    Take complete 5-step hostel & college baseline audit →
                   </Link>
                 </div>
               </div>
@@ -248,226 +282,48 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* THREE PILLARS / HOW IT WORKS */}
+      {/* CORE PLATFORM FEATURES */}
       <section style={{ padding: '5rem 0', backgroundColor: '#ffffff' }}>
         <div className="container">
           <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 3.5rem auto' }}>
             <span style={{ fontSize: '0.8125rem', fontWeight: 700, textTransform: 'uppercase', color: '#059669', letterSpacing: '0.05em' }}>
-              Simple & Rigorous
+              Built For Indian Students
             </span>
             <h2 style={{ fontSize: '2.25rem', marginTop: '0.5rem', marginBottom: '1rem', color: '#0f172a' }}>
-              How GreenTrack Works
-            </h2>
-            <p style={{ color: '#64748b', fontSize: '1rem', lineHeight: 1.6 }}>
-              Built specifically for university routines: dorm life, campus dining halls, student transit passes, and shared living.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
-            {/* Step 1 */}
-            <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
-              <div style={{
-                width: '3.5rem',
-                height: '3.5rem',
-                borderRadius: '1rem',
-                backgroundColor: '#eff6ff',
-                color: '#2563eb',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '1.5rem',
-                fontSize: '1.25rem',
-                fontWeight: 800
-              }}>
-                1
-              </div>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', color: '#0f172a' }}>
-                Establish Your Baseline
-              </h3>
-              <p style={{ color: '#64748b', fontSize: '0.9375rem', lineHeight: 1.6 }}>
-                Answer 5 simple questions about your daily commute distance, dorm or apartment electricity, dining choices, and recycling habits.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
-              <div style={{
-                width: '3.5rem',
-                height: '3.5rem',
-                borderRadius: '1rem',
-                backgroundColor: '#ecfdf5',
-                color: '#059669',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '1.5rem',
-                fontSize: '1.25rem',
-                fontWeight: 800
-              }}>
-                2
-              </div>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', color: '#0f172a' }}>
-                Simulate & Optimize
-              </h3>
-              <p style={{ color: '#64748b', fontSize: '0.9375rem', lineHeight: 1.6 }}>
-                Use the What-If Simulator to test realistic changes like Meatless Mondays or walking twice a week before committing to them.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column' }}>
-              <div style={{
-                width: '3.5rem',
-                height: '3.5rem',
-                borderRadius: '1rem',
-                backgroundColor: '#f5f3ff',
-                color: '#7c3aed',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '1.5rem',
-                fontSize: '1.25rem',
-                fontWeight: 800
-              }}>
-                3
-              </div>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', color: '#0f172a' }}>
-                AI-Powered Action
-              </h3>
-              <p style={{ color: '#64748b', fontSize: '0.9375rem', lineHeight: 1.6 }}>
-                Receive tailored budget-friendly recommendations from your Green AI Coach grounded directly in your emission data.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CORE PLATFORM FEATURES GRID */}
-      <section style={{ padding: '5rem 0', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 3.5rem auto' }}>
-            <span style={{ fontSize: '0.8125rem', fontWeight: 700, textTransform: 'uppercase', color: '#059669', letterSpacing: '0.05em' }}>
-              Features Built for Campus Life
-            </span>
-            <h2 style={{ fontSize: '2.25rem', marginTop: '0.5rem', marginBottom: '1rem', color: '#0f172a' }}>
-              Everything You Need for Impact
+              Realistic Campus Climate Tracking
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
-            {/* Feature 1 */}
-            <div className="card" style={{ display: 'flex', gap: '1.25rem' }}>
-              <div style={{ padding: '0.875rem', backgroundColor: '#e0f2fe', borderRadius: '0.75rem', height: 'fit-content', color: '#0284c7' }}>
-                <Bus size={24} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+            <div className="card">
+              <div style={{ padding: '0.875rem', backgroundColor: '#e0f2fe', borderRadius: '0.75rem', width: 'fit-content', color: '#0284c7', marginBottom: '1rem' }}>
+                <Train size={24} />
               </div>
-              <div>
-                <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#0f172a' }}>Transit & Commute Analytics</h4>
-                <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6 }}>
-                  Track carpool savings, subway rides, electric scooter hops, and walk trips with automatic distance-to-CO₂e conversion.
-                </p>
-              </div>
+              <h4 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', color: '#0f172a' }}>Metro, Auto & State Buses</h4>
+              <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6 }}>
+                Accurate Indian factors for DMRC, BMTC, BEST, auto rickshaws (CNG/petrol), and two-wheelers (Activa, Splendor, Pulsar).
+              </p>
             </div>
 
-            {/* Feature 2 */}
-            <div className="card" style={{ display: 'flex', gap: '1.25rem' }}>
-              <div style={{ padding: '0.875rem', backgroundColor: '#ecfdf5', borderRadius: '0.75rem', height: 'fit-content', color: '#059669' }}>
+            <div className="card">
+              <div style={{ padding: '0.875rem', backgroundColor: '#ecfdf5', borderRadius: '0.75rem', width: 'fit-content', color: '#059669', marginBottom: '1rem' }}>
                 <Utensils size={24} />
               </div>
-              <div>
-                <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#0f172a' }}>Dining Hall & Diet Impact</h4>
-                <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6 }}>
-                  Understand the tangible carbon difference between plant-based dining and high-meat consumption across every semester.
-                </p>
-              </div>
+              <h4 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', color: '#0f172a' }}>Hostel Mess Thali Analytics</h4>
+              <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6 }}>
+                Tailored for Indian dietary realities: Pure vegetarian thalis, Jain options, and campus canteen choices.
+              </p>
             </div>
 
-            {/* Feature 3 */}
-            <div className="card" style={{ display: 'flex', gap: '1.25rem' }}>
-              <div style={{ padding: '0.875rem', backgroundColor: '#fef3c7', borderRadius: '0.75rem', height: 'fit-content', color: '#d97706' }}>
+            <div className="card">
+              <div style={{ padding: '0.875rem', backgroundColor: '#fef3c7', borderRadius: '0.75rem', width: 'fit-content', color: '#d97706', marginBottom: '1rem' }}>
                 <Zap size={24} />
               </div>
-              <div>
-                <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#0f172a' }}>Dorm & Apartment Energy</h4>
-                <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6 }}>
-                  Accurately compute electricity footprints using regional grid emission metrics (EPA eGRID) and practical cooling/heating tips.
-                </p>
-              </div>
+              <h4 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', color: '#0f172a' }}>CEA Grid Certified Factors</h4>
+              <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6 }}>
+                Electricity footprint computed using the Central Electricity Authority (0.720 kg CO₂/kWh) for hostel fans, coolers, and PG appliances.
+              </p>
             </div>
-
-            {/* Feature 4 */}
-            <div className="card" style={{ display: 'flex', gap: '1.25rem' }}>
-              <div style={{ padding: '0.875rem', backgroundColor: '#f3e8ff', borderRadius: '0.75rem', height: 'fit-content', color: '#7c3aed' }}>
-                <Sliders size={24} />
-              </div>
-              <div>
-                <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#0f172a' }}>What-If Scenario Simulator</h4>
-                <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6 }}>
-                  Test lifestyle modifications interactively and project annual emissions reductions alongside equivalent trees planted.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 5 */}
-            <div className="card" style={{ display: 'flex', gap: '1.25rem' }}>
-              <div style={{ padding: '0.875rem', backgroundColor: '#ecfdf5', borderRadius: '0.75rem', height: 'fit-content', color: '#059669' }}>
-                <Sparkles size={24} />
-              </div>
-              <div>
-                <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#0f172a' }}>AI Sustainability Coach</h4>
-                <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6 }}>
-                  An intelligent companion trained on college living constraints, offering realistic recipes, thrifting guidance, and habits.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 6 */}
-            <div className="card" style={{ display: 'flex', gap: '1.25rem' }}>
-              <div style={{ padding: '0.875rem', backgroundColor: '#fee2e2', borderRadius: '0.75rem', height: 'fit-content', color: '#dc2626' }}>
-                <ShieldCheck size={24} />
-              </div>
-              <div>
-                <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#0f172a' }}>Campus Admin Aggregates</h4>
-                <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6 }}>
-                  Privacy-first aggregate dashboards for campus sustainability directors to measure university climate goals.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CALL TO ACTION BANNER */}
-      <section style={{ padding: '4.5rem 0', backgroundColor: '#059669', color: '#ffffff', textAlign: 'center' }}>
-        <div className="container" style={{ maxWidth: '720px' }}>
-          <h2 style={{ fontSize: '2.5rem', color: '#ffffff', marginBottom: '1rem' }}>
-            Ready to measure your campus impact?
-          </h2>
-          <p style={{ fontSize: '1.125rem', color: '#d1fae5', lineHeight: 1.6, marginBottom: '2rem' }}>
-            Join students across the university in calculating footprints, taking tangible eco-challenges, and building a greener campus.
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <Link to="/register" style={{
-              backgroundColor: '#ffffff',
-              color: '#059669',
-              fontWeight: 700,
-              padding: '0.875rem 1.75rem',
-              borderRadius: '0.75rem',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem'
-            }}>
-              Create Free Account <ArrowRight size={18} />
-            </Link>
-            <Link to="/login" style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.15)',
-              color: '#ffffff',
-              fontWeight: 600,
-              padding: '0.875rem 1.5rem',
-              borderRadius: '0.75rem',
-              border: '1px solid rgba(255, 255, 255, 0.3)'
-            }}>
-              Sign In Existing User
-            </Link>
           </div>
         </div>
       </section>

@@ -5,16 +5,13 @@ import {
   Edit3, 
   Search, 
   Filter, 
-  Bus, 
-  Utensils, 
-  Zap, 
-  ShoppingBag, 
-  Trash, 
   Download,
-  AlertCircle
+  AlertCircle,
+  Train,
+  ArrowRightLeft
 } from 'lucide-react';
 import { useCarbon } from '../context/CarbonContext';
-import { calculateActivityEmission, EMISSION_FACTORS } from '../services/carbonEngine';
+import { calculateActivityEmission, INDIA_EMISSION_FACTORS } from '../services/carbonEngine';
 
 export default function ActivitiesPage() {
   const { activities, addActivity, updateActivity, deleteActivity } = useCarbon();
@@ -27,12 +24,17 @@ export default function ActivitiesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
+  // Commute distance going and coming states for adding/editing commute
+  const [isCommuteSplit, setIsCommuteSplit] = useState(true);
+  const [goingKm, setGoingKm] = useState(8);
+  const [comingKm, setComingKm] = useState(8);
+
   // Form State
   const [form, setForm] = useState({
     category: 'transport',
-    subtype: 'bus',
+    subtype: 'metro',
     label: '',
-    quantity: 10,
+    quantity: 16,
     unit: 'km',
     date: new Date().toISOString().split('T')[0],
     note: ''
@@ -40,11 +42,13 @@ export default function ActivitiesPage() {
 
   const handleOpenAdd = () => {
     setEditingId(null);
+    setGoingKm(8);
+    setComingKm(8);
     setForm({
       category: 'transport',
-      subtype: 'bus',
+      subtype: 'metro',
       label: '',
-      quantity: 10,
+      quantity: 16,
       unit: 'km',
       date: new Date().toISOString().split('T')[0],
       note: ''
@@ -67,13 +71,13 @@ export default function ActivitiesPage() {
   };
 
   const handleCategoryChange = (cat) => {
-    let sub = 'bus';
+    let sub = 'metro';
     let unit = 'km';
-    let qty = 10;
-    if (cat === 'food') { sub = 'vegetarian'; unit = 'day'; qty = 1; }
-    if (cat === 'energy') { sub = 'dorm_room'; unit = 'kWh'; qty = 25; }
-    if (cat === 'shopping') { sub = 'clothing_thrift'; unit = 'item'; qty = 1; }
-    if (cat === 'waste') { sub = 'recycled_kg'; unit = 'kg'; qty = 3; }
+    let qty = 16;
+    if (cat === 'food') { sub = 'pure_veg'; unit = 'day'; qty = 1; }
+    if (cat === 'energy') { sub = 'hostel_room'; unit = 'kWh'; qty = 15; }
+    if (cat === 'shopping') { sub = 'thrift_clothes'; unit = 'item'; qty = 1; }
+    if (cat === 'waste') { sub = 'kabadiwala_recycled'; unit = 'kg'; qty = 3; }
 
     setForm(prev => ({
       ...prev,
@@ -82,6 +86,12 @@ export default function ActivitiesPage() {
       unit,
       quantity: qty
     }));
+  };
+
+  const handleDistanceSplitChange = (going, coming) => {
+    setGoingKm(going);
+    setComingKm(coming);
+    setForm(prev => ({ ...prev, quantity: Number(going) + Number(coming) }));
   };
 
   const handleSubmit = (e) => {
@@ -112,7 +122,7 @@ export default function ActivitiesPage() {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `greentrack_activities_${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `ecosphere_activities_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
   };
 
@@ -130,11 +140,11 @@ export default function ActivitiesPage() {
       }}>
         <div>
           <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Data Ledger
+            College Ledger
           </span>
           <h1 style={{ fontSize: '2.25rem', color: '#0f172a' }}>Activity Management</h1>
           <p style={{ fontSize: '0.9375rem', color: '#64748b' }}>
-            Log, verify, edit, and audit all carbon-emitting activities.
+            Log and audit commute trips (going & coming), hostel mess thalis, and recycling entries.
           </p>
         </div>
 
@@ -143,7 +153,7 @@ export default function ActivitiesPage() {
             <Download size={16} /> Export CSV
           </button>
           <button onClick={handleOpenAdd} className="btn-primary">
-            <Plus size={18} /> Add New Entry
+            <Plus size={18} /> Add Activity
           </button>
         </div>
       </div>
@@ -160,7 +170,7 @@ export default function ActivitiesPage() {
           <div style={{ position: 'relative' }}>
             <input
               type="text"
-              placeholder="Search description, notes..."
+              placeholder="Search metro trips, mess meals, notes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="form-input"
@@ -178,17 +188,16 @@ export default function ActivitiesPage() {
               className="form-select"
             >
               <option value="all">All Categories</option>
-              <option value="transport">Transportation</option>
-              <option value="food">Food & Meals</option>
-              <option value="energy">Electricity</option>
-              <option value="shopping">Shopping</option>
-              <option value="waste">Waste & Recycling</option>
+              <option value="transport">Transportation / Commute</option>
+              <option value="food">Hostel Mess & Food</option>
+              <option value="energy">Electricity (CEA)</option>
+              <option value="shopping">Clothing & Notes</option>
+              <option value="waste">Kabadiwala & Waste</option>
             </select>
           </div>
 
-          {/* Aggregate badge */}
           <div style={{ textAlign: 'right', fontSize: '0.875rem', color: '#64748b' }}>
-            Showing <strong>{filteredActivities.length}</strong> records (Total: <strong style={{ color: '#059669' }}>{totalFilteredEmissions.toFixed(2)} kg CO₂e</strong>)
+            Showing <strong>{filteredActivities.length}</strong> records (Total: <strong style={{ color: '#059669' }}>{totalFilteredEmissions.toFixed(2)} kg CO₂</strong>)
           </div>
         </div>
       </div>
@@ -200,9 +209,9 @@ export default function ActivitiesPage() {
             <thead style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0', color: '#475569', fontWeight: 600 }}>
               <tr>
                 <th style={{ padding: '1rem 1.25rem' }}>Category</th>
-                <th style={{ padding: '1rem 1.25rem' }}>Activity Description</th>
+                <th style={{ padding: '1rem 1.25rem' }}>Description</th>
                 <th style={{ padding: '1rem 1.25rem' }}>Quantity</th>
-                <th style={{ padding: '1rem 1.25rem' }}>Calculated CO₂e</th>
+                <th style={{ padding: '1rem 1.25rem' }}>Calculated CO₂</th>
                 <th style={{ padding: '1rem 1.25rem' }}>Date</th>
                 <th style={{ padding: '1rem 1.25rem', textAlign: 'right' }}>Actions</th>
               </tr>
@@ -213,7 +222,7 @@ export default function ActivitiesPage() {
                   <td colSpan={6} style={{ padding: '3rem', textAlign: 'center', color: '#94a3b8' }}>
                     <AlertCircle size={32} style={{ margin: '0 auto 0.5rem auto', color: '#cbd5e1' }} />
                     <p style={{ fontSize: '1rem', fontWeight: 600, color: '#64748b' }}>No activities found</p>
-                    <p style={{ fontSize: '0.8125rem' }}>Try clearing filters or add a new record.</p>
+                    <p style={{ fontSize: '0.8125rem' }}>Try clearing your search or add a new record.</p>
                   </td>
                 </tr>
               ) : (
@@ -251,7 +260,7 @@ export default function ActivitiesPage() {
                         <button
                           onClick={() => handleOpenEdit(act)}
                           style={{ padding: '0.375rem', color: '#64748b', borderRadius: '0.375rem' }}
-                          title="Edit activity"
+                          title="Edit"
                         >
                           <Edit3 size={16} />
                         </button>
@@ -262,7 +271,7 @@ export default function ActivitiesPage() {
                             }
                           }}
                           style={{ padding: '0.375rem', color: '#ef4444', borderRadius: '0.375rem' }}
-                          title="Delete activity"
+                          title="Delete"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -276,7 +285,7 @@ export default function ActivitiesPage() {
         </div>
       </div>
 
-      {/* ADD / EDIT MODAL */}
+      {/* ADD / EDIT MODAL WITH GOING AND COMING CONTROLS */}
       {modalOpen && (
         <div style={{
           position: 'fixed',
@@ -291,12 +300,12 @@ export default function ActivitiesPage() {
           zIndex: 100,
           padding: '1.5rem'
         }}>
-          <div className="card" style={{ maxWidth: '500px', width: '100%', padding: '2rem' }}>
+          <div className="card" style={{ maxWidth: '520px', width: '100%', padding: '2rem' }}>
             <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: '#0f172a' }}>
               {editingId ? 'Edit Activity Record' : 'Record New Carbon Activity'}
             </h3>
             <p style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '1.5rem' }}>
-              Numerical coefficients based on DEFRA 2023 & EPA factors
+              Calculated using India GHG Program 2015 & CEA factors
             </p>
 
             <form onSubmit={handleSubmit}>
@@ -307,17 +316,17 @@ export default function ActivitiesPage() {
                   onChange={(e) => handleCategoryChange(e.target.value)}
                   className="form-select"
                 >
-                  <option value="transport">Transportation</option>
-                  <option value="food">Food & Diet</option>
-                  <option value="energy">Electricity & Power</option>
-                  <option value="shopping">Shopping & Goods</option>
-                  <option value="waste">Waste & Recycling</option>
+                  <option value="transport">Transportation / Travel</option>
+                  <option value="food">Hostel Mess & Canteen</option>
+                  <option value="energy">Hostel / PG Electricity</option>
+                  <option value="shopping">Clothing & Notes</option>
+                  <option value="waste">Kabadiwala & Recycling</option>
                 </select>
               </div>
 
-              {/* Subtype depending on category */}
+              {/* Specific Subtypes */}
               <div className="form-group">
-                <label className="form-label">Activity Type</label>
+                <label className="form-label">Mode / Type</label>
                 <select
                   value={form.subtype}
                   onChange={(e) => setForm({ ...form, subtype: e.target.value })}
@@ -325,87 +334,128 @@ export default function ActivitiesPage() {
                 >
                   {form.category === 'transport' && (
                     <>
-                      <option value="walking">Walking (0 kg/km)</option>
-                      <option value="bicycle">Bicycle (0 kg/km)</option>
-                      <option value="ebike">E-Bike (0.015 kg/km)</option>
-                      <option value="bus">Campus / City Bus (0.089 kg/km)</option>
-                      <option value="metro">Metro / Tram (0.035 kg/km)</option>
-                      <option value="carpool">Carpool 2+ (0.096 kg/km)</option>
-                      <option value="rideshare">Rideshare Taxi (0.170 kg/km)</option>
-                      <option value="car_gasoline">Solo Gas Car (0.192 kg/km)</option>
-                      <option value="flight_short">Flight &lt; 3h (0.255 kg/km)</option>
+                      <option value="metro">Metro Rail (0.0125 kg/pax-km)</option>
+                      <option value="bus_city">City Bus - DTC/BEST (0.0152 kg/pax-km)</option>
+                      <option value="scooter_petrol">Petrol Scooter - Activa/Jupiter (0.0368 kg/km)</option>
+                      <option value="bike_100cc">Bike - Splendor/Platina (0.0358 kg/km)</option>
+                      <option value="bike_150cc">Bike - Pulsar/Apache 150cc (0.0458 kg/km)</option>
+                      <option value="bike_bullet">Bike - Royal Enfield 350cc (0.0597 kg/km)</option>
+                      <option value="auto_cng">Auto Rickshaw CNG (0.1077 kg/km)</option>
+                      <option value="auto_petrol">Auto Rickshaw Petrol (0.1135 kg/km)</option>
+                      <option value="local_train">Suburban Local Train (0.009 kg/pax-km)</option>
+                      <option value="car_small_cng">Small Car CNG (0.068 kg/km)</option>
+                      <option value="car_hatchback_petrol">Hatchback Petrol - Swift/i10 (0.127 kg/km)</option>
+                      <option value="car_sedan_petrol">Sedan Petrol - Dzire/City (0.153 kg/km)</option>
+                      <option value="bicycle">Bicycle / Walking (0.00 kg/km)</option>
                     </>
                   )}
                   {form.category === 'food' && (
                     <>
-                      <option value="vegan">Vegan Day (1.5 kg)</option>
-                      <option value="vegetarian">Vegetarian Day (2.5 kg)</option>
-                      <option value="pescatarian">Pescatarian Day (3.2 kg)</option>
-                      <option value="flexitarian">Flexitarian Day (3.8 kg)</option>
-                      <option value="high_meat">High Meat Day (7.2 kg)</option>
+                      <option value="pure_veg">Indian Vegetarian Mess Thali (1.8 kg/day)</option>
+                      <option value="jain_veg">Jain Vegetarian Day (1.6 kg/day)</option>
+                      <option value="vegan_indian">100% Plant-Based Vegan Day (1.3 kg/day)</option>
+                      <option value="occasional_nonveg">Eggitarian / Occasional Chicken Day (2.9 kg/day)</option>
+                      <option value="regular_nonveg">Regular Non-Vegetarian Day (4.8 kg/day)</option>
                     </>
                   )}
                   {form.category === 'energy' && (
                     <>
-                      <option value="dorm_room">Campus Dorm (0.385 kg/kWh)</option>
-                      <option value="shared_apt">Shared Apartment (0.385 kg/kWh)</option>
-                      <option value="green_tariff">Green Tariff / Solar (0.05 kg/kWh)</option>
+                      <option value="hostel_room">College Hostel Room (0.720 kg/kWh)</option>
+                      <option value="hostel_ac_room">Hostel AC Room (0.720 kg/kWh)</option>
+                      <option value="pg_sharing">PG Room Shared (0.720 kg/kWh)</option>
+                      <option value="rooftop_solar">Campus Solar (0.045 kg/kWh)</option>
                     </>
                   )}
                   {form.category === 'shopping' && (
                     <>
-                      <option value="clothing_thrift">Thrifted Clothing (1.2 kg/item)</option>
-                      <option value="clothing_new">New Fast-Fashion Item (15.0 kg/item)</option>
-                      <option value="electronics_small">Small Device (35.0 kg/item)</option>
-                      <option value="laptop_phone">Laptop / Phone (85.0 kg/item)</option>
-                      <option value="books_stationery">Books / Supplies (2.5 kg/item)</option>
+                      <option value="thrift_clothes">Thrifted / Secondhand Clothes (0.9 kg/item)</option>
+                      <option value="clothing_desi">New Kurta / Cotton Shirt (8.5 kg/item)</option>
+                      <option value="books_photocopy">Notes & Standard Textbooks (1.2 kg/bundle)</option>
                     </>
                   )}
                   {form.category === 'waste' && (
                     <>
-                      <option value="landfill_kg">Landfill Garbage (0.58 kg/kg)</option>
-                      <option value="recycled_kg">Recycled Materials (0.08 kg/kg)</option>
-                      <option value="composted_kg">Composted Organics (0.05 kg/kg)</option>
+                      <option value="kabadiwala_recycled">Sorted to Kabadiwala (0.06 kg/kg)</option>
+                      <option value="hostel_compost">Mess Wet Waste Composted (0.04 kg/kg)</option>
+                      <option value="municipal_dump">Municipal Landfill Dump (0.62 kg/kg)</option>
                     </>
                   )}
                 </select>
               </div>
 
+              {/* If Transport, allow Going and Coming separation */}
+              {form.category === 'transport' && (
+                <div style={{ backgroundColor: '#f8fafc', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.75rem' }}>
+                    <ArrowRightLeft size={15} color="#059669" /> Commute Distance (Going & Coming)
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div>
+                      <label style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>Going (km):</label>
+                      <input
+                        type="number"
+                        min="0.1"
+                        step="0.1"
+                        value={goingKm}
+                        onChange={(e) => handleDistanceSplitChange(e.target.value, comingKm)}
+                        className="form-input"
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>Coming (km):</label>
+                      <input
+                        type="number"
+                        min="0.1"
+                        step="0.1"
+                        value={comingKm}
+                        onChange={(e) => handleDistanceSplitChange(goingKm, e.target.value)}
+                        className="form-input"
+                      />
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#059669', fontWeight: 600, marginTop: '0.5rem', textAlign: 'right' }}>
+                    Round-Trip Total: {form.quantity} km
+                  </div>
+                </div>
+              )}
+
+              {form.category !== 'transport' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '0.75rem' }}>
+                  <div className="form-group">
+                    <label className="form-label">Quantity</label>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="any"
+                      required
+                      value={form.quantity}
+                      onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Unit</label>
+                    <input
+                      type="text"
+                      disabled
+                      value={form.unit}
+                      className="form-input"
+                      style={{ backgroundColor: '#f1f5f9' }}
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="form-group">
-                <label className="form-label">Label / Name</label>
+                <label className="form-label">Description / Route</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Bus commute to library"
+                  placeholder="e.g. Metro from Rajiv Chowk to Hauz Khas"
                   value={form.label}
                   onChange={(e) => setForm({ ...form, label: e.target.value })}
                   className="form-input"
                 />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '0.75rem' }}>
-                <div className="form-group">
-                  <label className="form-label">Quantity</label>
-                  <input
-                    type="number"
-                    min="0.1"
-                    step="any"
-                    required
-                    value={form.quantity}
-                    onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-                    className="form-input"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Unit</label>
-                  <input
-                    type="text"
-                    disabled
-                    value={form.unit}
-                    className="form-input"
-                    style={{ backgroundColor: '#f1f5f9' }}
-                  />
-                </div>
               </div>
 
               <div className="form-group">
@@ -415,17 +465,6 @@ export default function ActivitiesPage() {
                   required
                   value={form.date}
                   onChange={(e) => setForm({ ...form, date: e.target.value })}
-                  className="form-input"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Optional Note</label>
-                <input
-                  type="text"
-                  placeholder="Additional context or passengers..."
-                  value={form.note}
-                  onChange={(e) => setForm({ ...form, note: e.target.value })}
                   className="form-input"
                 />
               </div>

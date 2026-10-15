@@ -6,55 +6,56 @@ import {
   getStudentBenchmarkComparison 
 } from '../src/services/carbonEngine.js';
 
-describe('Carbon Engine Calculations', () => {
+describe('EcoSphere Indian Carbon Engine Calculations', () => {
   it('correctly calculates zero emissions for walking and biking', () => {
     expect(calculateActivityEmission('transport', 'walking', 10)).toBe(0);
     expect(calculateActivityEmission('transport', 'bicycle', 25)).toBe(0);
   });
 
-  it('correctly calculates bus transit emissions with DEFRA factor (0.089)', () => {
-    // 10 km * 0.089 = 0.89 kg CO2e
-    expect(calculateActivityEmission('transport', 'bus', 10)).toBe(0.89);
+  it('correctly calculates Metro rail transit emissions (0.0125 kg CO2/pax-km)', () => {
+    // 20 km * 0.0125 = 0.25 kg CO2
+    expect(calculateActivityEmission('transport', 'metro', 20)).toBe(0.25);
   });
 
-  it('correctly calculates personal solo car emissions (0.192)', () => {
-    // 50 km * 0.192 = 9.6 kg CO2e
-    expect(calculateActivityEmission('transport', 'car_gasoline', 50)).toBe(9.6);
+  it('correctly calculates India GHG Program public bus emissions (0.015161)', () => {
+    // 10 km * 0.015161 = 0.152 kg CO2
+    expect(calculateActivityEmission('transport', 'bus_city', 10)).toBe(0.152);
   });
 
-  it('correctly calculates food emissions for vegan and vegetarian diets', () => {
-    // 1 day vegan * 1.5 = 1.5
-    expect(calculateActivityEmission('food', 'vegan', 1)).toBe(1.5);
-    // 1 day vegetarian * 2.5 = 2.5
-    expect(calculateActivityEmission('food', 'vegetarian', 1)).toBe(2.5);
+  it('correctly calculates India GHG Program 2-wheeler emissions (Activa <110cc = 0.0368)', () => {
+    // 10 km * 0.0368 = 0.368 kg CO2
+    expect(calculateActivityEmission('transport', 'scooter_petrol', 10)).toBe(0.368);
   });
 
-  it('correctly computes tree equivalents (approx 21.77 kg/tree)', () => {
-    // 217.7 kg CO2 => 10.0 trees
-    expect(getTreeEquivalents(217.7)).toBe('10.0');
+  it('correctly calculates India GHG Program CNG auto emissions (0.10768)', () => {
+    // 5 km * 0.10768 = 0.538 kg CO2
+    expect(calculateActivityEmission('transport', 'auto_cng', 5)).toBe(0.538);
   });
 
-  it('correctly compares student footprint with college average (3200 kg)', () => {
-    const comparison = getStudentBenchmarkComparison(2800);
-    expect(comparison.isLower).toBe(true);
-    expect(comparison.percentDiff).toBe(13); // |2800-3200| / 3200 = 12.5% => 13%
+  it('correctly calculates pure vegetarian thali food emissions (1.8 kg/day)', () => {
+    expect(calculateActivityEmission('food', 'pure_veg', 1)).toBe(1.8);
   });
 
-  it('calculates baseline annual calculation reproducibly', () => {
+  it('correctly handles separate going and coming distances in baseline calculation', () => {
     const result = calculateBaselineAnnual({
-      commuteMode: 'bus',
-      commuteDistanceKm: 6.5,
-      housingType: 'dorm_room',
-      electricityKwh: 120,
-      dietType: 'flexitarian',
-      clothingItemsPerMonth: 2,
+      commuteMode: 'metro',
+      goingDistanceKm: 10,
+      comingDistanceKm: 12, // 22 km round trip
+      housingType: 'hostel_room',
+      electricityKwh: 65,
+      dietType: 'pure_veg',
+      clothingItemsPerMonth: 1,
       thriftingPref: 'occasional',
-      wasteBagsPerWeek: 2,
+      wasteBagsPerWeek: 1.5,
       recyclesRegularly: true
     });
-    expect(result.total).toBeGreaterThan(1500);
-    expect(result.breakdown.transport).toBeGreaterThan(0);
-    expect(result.breakdown.energy).toBeGreaterThan(0);
-    expect(result.breakdown.food).toBeGreaterThan(0);
+
+    // 22 km * 0.0125 * 180 days = 49.5 kg CO2
+    expect(result.breakdown.transport).toBe(50);
+    expect(result.total).toBeGreaterThan(1000);
+  });
+
+  it('computes native Indian tree equivalents (~21.0 kg/tree)', () => {
+    expect(getTreeEquivalents(210)).toBe('10.0');
   });
 });

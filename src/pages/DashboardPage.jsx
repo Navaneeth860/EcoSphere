@@ -7,14 +7,13 @@ import {
   TreePine, 
   Sliders, 
   Sparkles, 
-  ArrowRight, 
-  CheckCircle2, 
-  Bus, 
-  Zap, 
-  Utensils, 
-  ShoppingBag, 
+  Calendar,
+  Train,
+  Zap,
+  Utensils,
+  ShoppingBag,
   Trash2,
-  Calendar
+  ArrowRightLeft
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -48,44 +47,44 @@ export default function DashboardPage() {
     activities, 
     benchmark, 
     goals, 
-    badges, 
     addActivity 
   } = useCarbon();
 
   // Quick Activity Quick-Add modal state
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [quickCategory, setQuickCategory] = useState('transport');
-  const [quickSubtype, setQuickSubtype] = useState('bus');
-  const [quickQuantity, setQuickQuantity] = useState(8);
+  const [quickSubtype, setQuickSubtype] = useState('metro');
+  const [quickGoingKm, setQuickGoingKm] = useState(8.5);
+  const [quickComingKm, setQuickComingKm] = useState(8.5);
+  const [quickQuantity, setQuickQuantity] = useState(17);
   const [quickUnit, setQuickUnit] = useState('km');
   const [quickLabel, setQuickLabel] = useState('');
 
-  // Pie chart data from baseline breakdown
   const pieData = [
-    { name: 'Transport', value: baseline.breakdown.transport, color: CATEGORY_COLORS.transport, key: 'transport' },
-    { name: 'Energy', value: baseline.breakdown.energy, color: CATEGORY_COLORS.energy, key: 'energy' },
-    { name: 'Food', value: baseline.breakdown.food, color: CATEGORY_COLORS.food, key: 'food' },
-    { name: 'Shopping', value: baseline.breakdown.shopping, color: CATEGORY_COLORS.shopping, key: 'shopping' },
-    { name: 'Waste', value: baseline.breakdown.waste, color: CATEGORY_COLORS.waste, key: 'waste' }
+    { name: 'Commute (Metro/Bus/Scooter)', value: baseline.breakdown.transport, color: CATEGORY_COLORS.transport, key: 'transport' },
+    { name: 'Hostel Power (CEA Grid)', value: baseline.breakdown.energy, color: CATEGORY_COLORS.energy, key: 'energy' },
+    { name: 'Mess Diet (Veg/Non-Veg)', value: baseline.breakdown.food, color: CATEGORY_COLORS.food, key: 'food' },
+    { name: 'Clothing & Supplies', value: baseline.breakdown.shopping, color: CATEGORY_COLORS.shopping, key: 'shopping' },
+    { name: 'Kabadiwala & Waste', value: baseline.breakdown.waste, color: CATEGORY_COLORS.waste, key: 'waste' }
   ];
 
-  // Monthly trend comparison data (simulated seasonal semester distribution)
   const monthlyTrends = [
-    { month: 'Jun', total: Math.round(baseline.total * 0.07), avg: 260 },
-    { month: 'Jul', total: Math.round(baseline.total * 0.06), avg: 250 },
-    { month: 'Aug', total: Math.round(baseline.total * 0.08), avg: 270 },
-    { month: 'Sep', total: Math.round(baseline.total * 0.09), avg: 275 },
-    { month: 'Oct', total: Math.round(baseline.total * 0.085), avg: 265 },
+    { month: 'Jun', total: Math.round(baseline.total * 0.075), avg: 155 },
+    { month: 'Jul', total: Math.round(baseline.total * 0.070), avg: 150 },
+    { month: 'Aug', total: Math.round(baseline.total * 0.085), avg: 160 },
+    { month: 'Sep', total: Math.round(baseline.total * 0.090), avg: 165 },
+    { month: 'Oct', total: Math.round(baseline.total * 0.080), avg: 155 },
   ];
 
   const handleQuickAddSubmit = (e) => {
     e.preventDefault();
+    const finalQuantity = quickCategory === 'transport' ? (Number(quickGoingKm) + Number(quickComingKm)) : Number(quickQuantity);
     addActivity({
       category: quickCategory,
       subtype: quickSubtype,
-      quantity: quickQuantity,
+      quantity: finalQuantity,
       unit: quickUnit,
-      label: quickLabel || `${quickCategory} activity`
+      label: quickLabel || `${quickCategory} trip`
     });
     setShowQuickAdd(false);
     setQuickLabel('');
@@ -108,14 +107,14 @@ export default function DashboardPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
             <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Student Footprint Portal
+              🇮🇳 Indian University Student Hub
             </span>
           </div>
           <h1 style={{ fontSize: '2.25rem', color: '#0f172a' }}>
-            Hello, {currentUser?.name?.split(' ')[0] || 'Student'} 👋
+            Namaste, {currentUser?.name?.split(' ')[0] || 'Student'} 👋
           </h1>
           <p style={{ fontSize: '0.9375rem', color: '#64748b' }}>
-            Here is your verified academic-year carbon footprint audit and active lifestyle metrics.
+            {currentUser?.university || 'IIT Delhi'} • B.Tech Environmental Systems
           </p>
         </div>
 
@@ -124,21 +123,20 @@ export default function DashboardPage() {
             onClick={() => setShowQuickAdd(true)}
             className="btn-primary"
           >
-            <Plus size={18} /> Log Trip / Meal
+            <Plus size={18} /> Log Metro / Meal
           </button>
           <Link to="/simulator" className="btn-secondary">
-            <Sliders size={18} /> Open Simulator
+            <Sliders size={18} /> What-If Simulator
           </Link>
         </div>
       </div>
 
       {/* 4 TOP KPI CARDS */}
       <div className="grid grid-cols-4 gap-4" style={{ marginBottom: '2.5rem' }}>
-        {/* Card 1 */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
             <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
-              Annual Footprint
+              Academic Footprint
             </span>
             <div style={{ padding: '0.375rem', backgroundColor: '#ecfdf5', borderRadius: '0.5rem', color: '#059669' }}>
               🌱
@@ -150,17 +148,16 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', marginTop: '0.5rem', fontSize: '0.8125rem' }}>
             {benchmark.isLower ? (
               <span style={{ color: '#059669', display: 'flex', alignItems: 'center', fontWeight: 600 }}>
-                <TrendingDown size={14} style={{ marginRight: '2px' }} /> {benchmark.percentDiff}% below campus avg
+                <TrendingDown size={14} style={{ marginRight: '2px' }} /> {benchmark.percentDiff}% below Indian avg (1,850 kg)
               </span>
             ) : (
               <span style={{ color: '#d97706', display: 'flex', alignItems: 'center', fontWeight: 600 }}>
-                <TrendingUp size={14} style={{ marginRight: '2px' }} /> {benchmark.percentDiff}% above campus avg
+                <TrendingUp size={14} style={{ marginRight: '2px' }} /> {benchmark.percentDiff}% above Indian avg
               </span>
             )}
           </div>
         </div>
 
-        {/* Card 2 */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
             <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
@@ -174,29 +171,27 @@ export default function DashboardPage() {
             {Math.round(baseline.total / 12)} <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>kg / mo</span>
           </div>
           <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.5rem' }}>
-            Target: &lt; 220 kg / month
+            National target: &lt; 150 kg/mo
           </div>
         </div>
 
-        {/* Card 3 */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
             <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
-              Trees to Offset
+              Peepal / Neem Trees
             </span>
             <div style={{ padding: '0.375rem', backgroundColor: '#f0fdf4', borderRadius: '0.5rem', color: '#16a34a' }}>
               <TreePine size={18} />
             </div>
           </div>
           <div style={{ fontSize: '2rem', fontWeight: 800, color: '#059669', lineHeight: 1.1 }}>
-            {treesNeeded} <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>mature trees</span>
+            {treesNeeded} <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>trees</span>
           </div>
           <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.5rem' }}>
             Annual carbon sequestration
           </div>
         </div>
 
-        {/* Card 4 */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
             <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
@@ -210,7 +205,7 @@ export default function DashboardPage() {
             {activities.length} <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>entries</span>
           </div>
           <div style={{ fontSize: '0.8125rem', color: '#7c3aed', fontWeight: 600, marginTop: '0.5rem' }}>
-            {activityEmissionsByCategory.total} kg CO₂e tracked
+            {activityEmissionsByCategory.total} kg CO₂ tracked
           </div>
         </div>
       </div>
@@ -222,14 +217,13 @@ export default function DashboardPage() {
         gap: '1.5rem',
         marginBottom: '2.5rem'
       }}>
-        {/* Category Breakdown Donut */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Emissions by Category</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Proportion of your annual estimated carbon budget</p>
+              <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Emissions by Lifestyle Category</h3>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Govt of India & India GHG Program (2015) based</p>
             </div>
-            <span className="badge badge-emerald">Verified DEFRA</span>
+            <span className="badge badge-emerald">Verified MoEFCC</span>
           </div>
 
           <div style={{ height: '260px', width: '100%' }}>
@@ -249,30 +243,28 @@ export default function DashboardPage() {
                   ))}
                 </Pie>
                 <Tooltip 
-                  formatter={(value) => [`${value.toLocaleString()} kg CO₂e`, 'Emissions']}
-                  contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}
+                  formatter={(value) => [`${value.toLocaleString()} kg CO₂`, 'Emissions']}
+                  contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
                 />
               </PieChart>
             </ResponsiveContainer>
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.875rem', marginTop: '0.5rem' }}>
             {pieData.map((cat) => (
-              <div key={cat.name} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem' }}>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: cat.color }} />
-                <span style={{ color: '#475569' }}>{cat.name}:</span>
-                <strong style={{ color: '#0f172a' }}>{cat.value} kg</strong>
+              <div key={cat.name} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: cat.color }} />
+                <span>{cat.name.split(' ')[0]}: <strong>{cat.value} kg</strong></span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Monthly Trend Bar Chart */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Monthly Trend vs Campus Benchmark</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Historical trajectory over recent months</p>
+              <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Monthly Trajectory vs Indian Peer Benchmark</h3>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Historical trajectory vs national university average</p>
             </div>
             <span className="badge badge-blue">Trajectory</span>
           </div>
@@ -286,12 +278,12 @@ export default function DashboardPage() {
                 <Tooltip 
                   formatter={(value, name) => [
                     `${value} kg`, 
-                    name === 'total' ? 'Your Footprint' : 'Campus Peer Avg'
+                    name === 'total' ? 'Your Footprint' : 'Indian Student Avg'
                   ]}
                   contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
                 />
                 <Bar dataKey="total" fill="#059669" radius={[4, 4, 0, 0]} name="Your Footprint" />
-                <Bar dataKey="avg" fill="#cbd5e1" radius={[4, 4, 0, 0]} name="Campus Peer Avg" />
+                <Bar dataKey="avg" fill="#cbd5e1" radius={[4, 4, 0, 0]} name="Indian Student Avg" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -304,12 +296,12 @@ export default function DashboardPage() {
         gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
         gap: '1.5rem'
       }}>
-        {/* Recent Activities List */}
+        {/* Recent Activities */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
               <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Recent Activity Log</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Latest logged trips and meals</p>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Latest logged trips and mess meals</p>
             </div>
             <Link to="/activities" style={{ fontSize: '0.875rem', color: '#059669', fontWeight: 600 }}>
               View All ({activities.length}) →
@@ -324,7 +316,6 @@ export default function DashboardPage() {
                   padding: '0.875rem',
                   borderRadius: '0.75rem',
                   border: '1px solid #f1f5f9',
-                  backgroundColor: '#ffffff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between'
@@ -343,7 +334,7 @@ export default function DashboardPage() {
                            act.category === 'energy' ? '#d97706' :
                            act.category === 'shopping' ? '#7c3aed' : '#dc2626'
                   }}>
-                    {act.category === 'transport' && <Bus size={18} />}
+                    {act.category === 'transport' && <Train size={18} />}
                     {act.category === 'food' && <Utensils size={18} />}
                     {act.category === 'energy' && <Zap size={18} />}
                     {act.category === 'shopping' && <ShoppingBag size={18} />}
@@ -361,7 +352,7 @@ export default function DashboardPage() {
                   <div style={{ fontSize: '0.875rem', fontWeight: 700, color: act.co2Kg === 0 ? '#059669' : '#0f172a' }}>
                     {act.co2Kg === 0 ? '0.00 kg' : `+${act.co2Kg} kg`}
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>CO₂e</div>
+                  <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>CO₂</div>
                 </div>
               </div>
             ))}
@@ -372,11 +363,11 @@ export default function DashboardPage() {
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Sustainability Goals</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Active reduction challenges</p>
+              <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Active Commitments</h3>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Campus eco-challenges</p>
             </div>
             <Link to="/goals" style={{ fontSize: '0.875rem', color: '#059669', fontWeight: 600 }}>
-              Manage Goals →
+              All Goals →
             </Link>
           </div>
 
@@ -395,11 +386,11 @@ export default function DashboardPage() {
                     <div style={{ height: '100%', width: `${pct}%`, backgroundColor: pct >= 100 ? '#10b981' : '#059669' }} />
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b' }}>
-                    <span>Savings: ~{g.co2SavingsKg} kg CO₂e</span>
+                    <span>Savings: ~{g.co2SavingsKg} kg CO₂</span>
                     {pct >= 100 ? (
-                      <span style={{ color: '#059669', fontWeight: 700 }}>✓ Completed</span>
+                      <span style={{ color: '#059669', fontWeight: 700 }}>✓ Achieved</span>
                     ) : (
-                      <span>Deadline: {g.deadline}</span>
+                      <span>Target: {g.deadline}</span>
                     )}
                   </div>
                 </div>
@@ -410,20 +401,20 @@ export default function DashboardPage() {
           <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#f0fdf4', borderRadius: '0.75rem', border: '1px solid #bbf7d0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <div style={{ fontWeight: 700, fontSize: '0.875rem', color: '#166534' }}>
-                Need personalized advice?
+                Ask AI Campus Coach
               </div>
               <div style={{ fontSize: '0.75rem', color: '#15803d' }}>
-                Ask the AI sustainability coach tailored to your habits.
+                Get hostel and metro advice for IIT Delhi / Indian colleges.
               </div>
             </div>
             <Link to="/ai-assistant" className="btn-primary" style={{ padding: '0.5rem 0.875rem', fontSize: '0.8125rem' }}>
-              <Sparkles size={14} /> Talk to Coach
+              <Sparkles size={14} /> Open Coach
             </Link>
           </div>
         </div>
       </div>
 
-      {/* QUICK ADD MODAL */}
+      {/* QUICK ADD MODAL WITH GOING AND COMING */}
       {showQuickAdd && (
         <div style={{
           position: 'fixed',
@@ -439,9 +430,9 @@ export default function DashboardPage() {
           padding: '1.5rem'
         }}>
           <div className="card" style={{ maxWidth: '480px', width: '100%', padding: '2rem' }}>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: '#0f172a' }}>Log New Student Activity</h3>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: '#0f172a' }}>Log College Activity</h3>
             <p style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '1.5rem' }}>
-              Calculated deterministically using UK DEFRA & US EPA factors
+              Using India GHG Program (2015) & CEA factors
             </p>
 
             <form onSubmit={handleQuickAddSubmit}>
@@ -452,81 +443,103 @@ export default function DashboardPage() {
                   onChange={(e) => {
                     const cat = e.target.value;
                     setQuickCategory(cat);
-                    if (cat === 'transport') { setQuickSubtype('bus'); setQuickUnit('km'); setQuickQuantity(8); }
-                    if (cat === 'food') { setQuickSubtype('vegetarian'); setQuickUnit('day'); setQuickQuantity(1); }
-                    if (cat === 'energy') { setQuickSubtype('dorm_room'); setQuickUnit('kWh'); setQuickQuantity(20); }
-                    if (cat === 'shopping') { setQuickSubtype('clothing_thrift'); setQuickUnit('item'); setQuickQuantity(1); }
-                    if (cat === 'waste') { setQuickSubtype('recycled_kg'); setQuickUnit('kg'); setQuickQuantity(2); }
+                    if (cat === 'transport') { setQuickSubtype('metro'); setQuickUnit('km'); }
+                    if (cat === 'food') { setQuickSubtype('pure_veg'); setQuickUnit('day'); setQuickQuantity(1); }
+                    if (cat === 'energy') { setQuickSubtype('hostel_room'); setQuickUnit('kWh'); setQuickQuantity(15); }
+                    if (cat === 'shopping') { setQuickSubtype('thrift_clothes'); setQuickUnit('item'); setQuickQuantity(1); }
+                    if (cat === 'waste') { setQuickSubtype('kabadiwala_recycled'); setQuickUnit('kg'); setQuickQuantity(2); }
                   }}
                   className="form-select"
                 >
-                  <option value="transport">Transportation</option>
-                  <option value="food">Food & Meals</option>
-                  <option value="energy">Electricity & Housing</option>
-                  <option value="shopping">Shopping & Apparel</option>
-                  <option value="waste">Waste & Recycling</option>
+                  <option value="transport">Transportation / Commute</option>
+                  <option value="food">Hostel Mess / Food</option>
+                  <option value="energy">Hostel / PG Electricity</option>
+                  <option value="shopping">Clothing & Textbooks</option>
+                  <option value="waste">Kabadiwala & Recycling</option>
                 </select>
               </div>
 
               {quickCategory === 'transport' && (
-                <div className="form-group">
-                  <label className="form-label">Transport Mode</label>
-                  <select value={quickSubtype} onChange={(e) => setQuickSubtype(e.target.value)} className="form-select">
-                    <option value="walking">Walking (0 kg CO₂e)</option>
-                    <option value="bicycle">Bicycle (0 kg CO₂e)</option>
-                    <option value="ebike">E-Bike (0.015 kg CO₂e/km)</option>
-                    <option value="bus">Campus Bus (0.089 kg CO₂e/km)</option>
-                    <option value="metro">Metro / Subway (0.035 kg CO₂e/km)</option>
-                    <option value="carpool">Carpool 2+ (0.096 kg CO₂e/km)</option>
-                    <option value="rideshare">Rideshare / Taxi (0.170 kg CO₂e/km)</option>
-                    <option value="car_gasoline">Personal Car Solo (0.192 kg CO₂e/km)</option>
-                  </select>
-                </div>
+                <>
+                  <div className="form-group">
+                    <label className="form-label">Transport Mode</label>
+                    <select value={quickSubtype} onChange={(e) => setQuickSubtype(e.target.value)} className="form-select">
+                      <option value="metro">Metro Rail (0.0125 kg/pax-km)</option>
+                      <option value="bus_city">City Bus - DTC/BEST (0.0152 kg/pax-km)</option>
+                      <option value="scooter_petrol">Petrol Scooter - Activa (0.0368 kg/km)</option>
+                      <option value="bike_100cc">Bike - Splendor (0.0358 kg/km)</option>
+                      <option value="auto_cng">Auto Rickshaw CNG (0.1077 kg/km)</option>
+                      <option value="bicycle">Bicycle (0 kg/km)</option>
+                    </select>
+                  </div>
+
+                  <div style={{ backgroundColor: '#f8fafc', padding: '0.875rem', borderRadius: '0.5rem', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.8125rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.5rem' }}>
+                      <ArrowRightLeft size={14} color="#059669" /> Commute Distance (Going & Coming)
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                      <div>
+                        <label style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>Going (km):</label>
+                        <input
+                          type="number"
+                          min="0.1"
+                          step="0.1"
+                          value={quickGoingKm}
+                          onChange={(e) => setQuickGoingKm(Number(e.target.value))}
+                          className="form-input"
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>Coming (km):</label>
+                        <input
+                          type="number"
+                          min="0.1"
+                          step="0.1"
+                          value={quickComingKm}
+                          onChange={(e) => setQuickComingKm(Number(e.target.value))}
+                          className="form-input"
+                        />
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right', fontSize: '0.75rem', color: '#059669', fontWeight: 700, marginTop: '0.375rem' }}>
+                      Round-trip: {Number(quickGoingKm) + Number(quickComingKm)} km
+                    </div>
+                  </div>
+                </>
               )}
 
-              {quickCategory === 'food' && (
-                <div className="form-group">
-                  <label className="form-label">Diet Pattern / Meal</label>
-                  <select value={quickSubtype} onChange={(e) => setQuickSubtype(e.target.value)} className="form-select">
-                    <option value="vegan">100% Plant-Based Vegan (1.5 kg/day)</option>
-                    <option value="vegetarian">Vegetarian (2.5 kg/day)</option>
-                    <option value="pescatarian">Pescatarian (3.2 kg/day)</option>
-                    <option value="flexitarian">Low Meat / Flexitarian (3.8 kg/day)</option>
-                    <option value="high_meat">High Meat (7.2 kg/day)</option>
-                  </select>
+              {quickCategory !== 'transport' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '0.75rem' }}>
+                  <div className="form-group">
+                    <label className="form-label">Quantity</label>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="any"
+                      required
+                      value={quickQuantity}
+                      onChange={(e) => setQuickQuantity(e.target.value)}
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Unit</label>
+                    <input
+                      type="text"
+                      disabled
+                      value={quickUnit}
+                      className="form-input"
+                      style={{ backgroundColor: '#f1f5f9' }}
+                    />
+                  </div>
                 </div>
               )}
-
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '0.75rem' }}>
-                <div className="form-group">
-                  <label className="form-label">Quantity</label>
-                  <input
-                    type="number"
-                    min="0.1"
-                    step="any"
-                    required
-                    value={quickQuantity}
-                    onChange={(e) => setQuickQuantity(e.target.value)}
-                    className="form-input"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Unit</label>
-                  <input
-                    type="text"
-                    disabled
-                    value={quickUnit}
-                    className="form-input"
-                    style={{ backgroundColor: '#f1f5f9' }}
-                  />
-                </div>
-              </div>
 
               <div className="form-group">
-                <label className="form-label">Description / Note</label>
+                <label className="form-label">Description / Route</label>
                 <input
                   type="text"
-                  placeholder="e.g. Bus to campus science complex"
+                  placeholder="e.g. Metro ride to campus"
                   value={quickLabel}
                   onChange={(e) => setQuickLabel(e.target.value)}
                   className="form-input"
@@ -545,7 +558,7 @@ export default function DashboardPage() {
                   type="submit"
                   className="btn-primary"
                 >
-                  Save Activity
+                  Save Entry
                 </button>
               </div>
             </form>

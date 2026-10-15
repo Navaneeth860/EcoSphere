@@ -1,57 +1,53 @@
 import React, { useState } from 'react';
 import { 
   Sliders, 
-  ArrowRight, 
-  TrendingDown, 
-  TreePine, 
-  Sparkles, 
   RotateCcw, 
+  TreePine, 
   CheckCircle2, 
-  DollarSign,
-  AlertCircle
+  TrendingDown, 
+  Train, 
+  AlertCircle, 
+  ArrowRightLeft 
 } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { useCarbon } from '../context/CarbonContext';
-import { EMISSION_FACTORS, getTreeEquivalents } from '../services/carbonEngine';
+import { INDIA_EMISSION_FACTORS, getTreeEquivalents } from '../services/carbonEngine';
 
 export default function SimulatorPage() {
   const { baseline } = useCarbon();
 
-  // Scenario modification controls
-  const [bikeWalkDays, setBikeWalkDays] = useState(2); // days per week swapped to active transit
-  const [dietChange, setDietChange] = useState('flexitarian_to_veg'); // lifestyle dietary lever
-  const [unplugDormKwh, setUnplugDormKwh] = useState(20); // kwh saved per month from smart power strips / LED
-  const [thriftGarments, setThriftGarments] = useState(1); // new garments avoided per month by thrifting
+  // Indian Student lifestyle levers
+  const [metroDays, setMetroDays] = useState(3); // swap 3 days of scooter/cab to Metro/Bus
+  const [dietCommitment, setDietCommitment] = useState('veg_all_week'); // switch occasional nonveg to pure veg
+  const [hostelPowerSavingKwh, setHostelPowerSavingKwh] = useState(15); // turn off geysers/fans/standby
+  const [kabadiwalaRecyclingKg, setKabadiwalaRecyclingKg] = useState(4); // raddi/paper diversion
 
-  // Deterministic calculation of savings:
-  // 1. Commute savings: replacing 2 days/week (approx 36 weeks/yr = 72 days) * 12 km from bus (0.089) or car (0.192) to bike (0.00)
-  const commuteSavedKg = Math.round(bikeWalkDays * 36 * 12 * 0.089);
+  // 1. Commute savings:
+  // Replacing 3 days/week * 18 km round trip from petrol scooter (0.0368) or cab (0.127) to Metro (0.0125)
+  // Per day saved: 18 * (0.0368 - 0.0125) = ~0.437 kg * 36 weeks * 3 days = ~47 kg CO2
+  const commuteSavedKg = Math.round(metroDays * 36 * 17 * (0.0368 - 0.0125));
 
   // 2. Diet savings
   let dietSavedKg = 0;
-  if (dietChange === 'meatless_monday') {
-    // 1 day a week vegetarian instead of flexitarian (3.8 -> 2.5 = 1.3 kg saved * 52)
-    dietSavedKg = Math.round(1.3 * 52);
-  } else if (dietChange === 'flexitarian_to_veg') {
-    // full vegetarian switch (3.8 -> 2.5 = 1.3 kg saved * 365)
-    dietSavedKg = Math.round(1.3 * 365);
-  } else if (dietChange === 'veg_to_vegan') {
-    // vegetarian to vegan (2.5 -> 1.5 = 1.0 kg * 365)
-    dietSavedKg = Math.round(1.0 * 365);
+  if (dietCommitment === 'meatless_tuesday') {
+    dietSavedKg = Math.round(1.1 * 52); // ~57 kg
+  } else if (dietCommitment === 'veg_all_week') {
+    dietSavedKg = Math.round(1.1 * 365); // ~400 kg
+  } else if (dietCommitment === 'jain_or_vegan') {
+    dietSavedKg = Math.round(0.5 * 365); // ~182 kg
   }
 
-  // 3. Energy savings
-  const energySavedKg = Math.round(unplugDormKwh * 12 * 0.385);
+  // 3. Electricity savings using CEA India Grid factor (0.720 kg/kWh)
+  const energySavedKg = Math.round(hostelPowerSavingKwh * 12 * 0.720);
 
-  // 4. Shopping savings: 1 garment/mo avoided (15 kg each) vs thrifted (1.2 kg) = 13.8 kg * 12
-  const shoppingSavedKg = Math.round(thriftGarments * 12 * 13.8);
+  // 4. Waste & Kabadiwala savings
+  const wasteSavedKg = Math.round(kabadiwalaRecyclingKg * 12 * (0.62 - 0.06));
 
-  const totalProjectedSavings = commuteSavedKg + dietSavedKg + energySavedKg + shoppingSavedKg;
-  const simulatedFootprint = Math.max(400, baseline.total - totalProjectedSavings);
+  const totalProjectedSavings = commuteSavedKg + dietSavedKg + energySavedKg + wasteSavedKg;
+  const simulatedFootprint = Math.max(300, baseline.total - totalProjectedSavings);
   const percentageCut = Math.round((totalProjectedSavings / baseline.total) * 100);
   const treesEquiv = getTreeEquivalents(totalProjectedSavings);
 
-  // Chart comparison data
   const comparisonData = [
     {
       category: 'Total Footprint',
@@ -59,32 +55,32 @@ export default function SimulatorPage() {
       Simulated: simulatedFootprint
     },
     {
-      category: 'Transport',
+      category: 'Commute',
       Current: baseline.breakdown.transport,
       Simulated: Math.max(0, baseline.breakdown.transport - commuteSavedKg)
     },
     {
-      category: 'Diet & Food',
+      category: 'Hostel Diet',
       Current: baseline.breakdown.food,
       Simulated: Math.max(0, baseline.breakdown.food - dietSavedKg)
     },
     {
-      category: 'Dorm Energy',
+      category: 'Hostel Power',
       Current: baseline.breakdown.energy,
       Simulated: Math.max(0, baseline.breakdown.energy - energySavedKg)
     },
     {
-      category: 'Shopping',
-      Current: baseline.breakdown.shopping,
-      Simulated: Math.max(0, baseline.breakdown.shopping - shoppingSavedKg)
+      category: 'Shopping & Waste',
+      Current: baseline.breakdown.shopping + baseline.breakdown.waste,
+      Simulated: Math.max(0, (baseline.breakdown.shopping + baseline.breakdown.waste) - wasteSavedKg)
     }
   ];
 
   const handleReset = () => {
-    setBikeWalkDays(2);
-    setDietChange('flexitarian_to_veg');
-    setUnplugDormKwh(20);
-    setThriftGarments(1);
+    setMetroDays(3);
+    setDietCommitment('veg_all_week');
+    setHostelPowerSavingKwh(15);
+    setKabadiwalaRecyclingKg(4);
   };
 
   return (
@@ -105,12 +101,12 @@ export default function SimulatorPage() {
           </span>
           <h1 style={{ fontSize: '2.25rem', color: '#0f172a' }}>What-If Carbon Reduction Simulator</h1>
           <p style={{ fontSize: '0.9375rem', color: '#64748b' }}>
-            Test micro-lifestyle modifications and project your semester emissions savings in real time.
+            Simulate realistic Indian student lifestyle changes backed by India GHG Program & CEA factors.
           </p>
         </div>
 
         <button onClick={handleReset} className="btn-secondary">
-          <RotateCcw size={16} /> Reset Default Levers
+          Reset Default Levers
         </button>
       </div>
 
@@ -124,102 +120,101 @@ export default function SimulatorPage() {
         {/* LEVERS COLUMN */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           
-          {/* Lever 1: Transit */}
+          {/* Lever 1: Metro Commute Shift */}
           <div className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <h3 style={{ fontSize: '1.05rem', color: '#0f172a' }}>1. Active Commute Days</h3>
+              <h3 style={{ fontSize: '1.05rem', color: '#0f172a' }}>1. Shift Commute to Metro / City Bus</h3>
               <span className="badge badge-blue">+{commuteSavedKg} kg saved/yr</span>
             </div>
             <p style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '1rem' }}>
-              Replace motorized transit with bicycle or walking:
+              Replace petrol scooter (Activa) or solo car days with Metro Rail / Public Bus:
             </p>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', fontWeight: 700, color: '#059669', marginBottom: '0.25rem' }}>
-              <span>{bikeWalkDays} days / week</span>
-              <span style={{ color: '#64748b', fontWeight: 400 }}>approx 24 km/week</span>
+              <span>{metroDays} days / week via Metro</span>
+              <span style={{ color: '#64748b', fontWeight: 400 }}>Save on petrol & congestion</span>
             </div>
             <input
               type="range"
               min="0"
               max="5"
-              value={bikeWalkDays}
-              onChange={(e) => setBikeWalkDays(Number(e.target.value))}
+              value={metroDays}
+              onChange={(e) => setMetroDays(Number(e.target.value))}
               style={{ width: '100%', accentColor: '#059669' }}
             />
           </div>
 
-          {/* Lever 2: Food & Diet */}
+          {/* Lever 2: Desi Mess Diet */}
           <div className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <h3 style={{ fontSize: '1.05rem', color: '#0f172a' }}>2. Campus Dining Transition</h3>
+              <h3 style={{ fontSize: '1.05rem', color: '#0f172a' }}>2. Campus Mess Dietary Switch</h3>
               <span className="badge badge-emerald">+{dietSavedKg} kg saved/yr</span>
             </div>
             <p style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '1rem' }}>
-              Choose a realistic plant-forward commitment:
+              Opt for vegetarian hostel thali and reduce poultry/mutton frequency:
             </p>
             <select
-              value={dietChange}
-              onChange={(e) => setDietChange(e.target.value)}
+              value={dietCommitment}
+              onChange={(e) => setDietCommitment(e.target.value)}
               className="form-select"
             >
-              <option value="none">No Change to Current Diet (0 kg)</option>
-              <option value="meatless_monday">Meatless Monday Only (1 day/week veg) (~68 kg)</option>
-              <option value="flexitarian_to_veg">Full Vegetarian Transition (~475 kg)</option>
-              <option value="veg_to_vegan">Full 100% Plant-Based Vegan Transition (~365 kg)</option>
+              <option value="none">No Change to Current Diet (0 kg saved)</option>
+              <option value="meatless_tuesday">Vegetarian Days 2x a week (~57 kg saved)</option>
+              <option value="veg_all_week">Full Desi Vegetarian Mess Thali (~400 kg saved)</option>
+              <option value="jain_or_vegan">Plant-Based / Jain Transition (~182 kg saved)</option>
             </select>
           </div>
 
-          {/* Lever 3: Energy Savings */}
+          {/* Lever 3: Hostel Electricity */}
           <div className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <h3 style={{ fontSize: '1.05rem', color: '#0f172a' }}>3. Dorm Energy Conservation</h3>
+              <h3 style={{ fontSize: '1.05rem', color: '#0f172a' }}>3. Hostel Power Conservation (CEA)</h3>
               <span className="badge badge-amber">+{energySavedKg} kg saved/yr</span>
             </div>
             <p style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '1rem' }}>
-              Unplug idle chargers, use LED desk bulbs, and cold-water laundry washes:
+              Turn off cooler/geysers when leaving, switch to LED lamps, and power off idle monitors:
             </p>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', fontWeight: 700, color: '#d97706', marginBottom: '0.25rem' }}>
-              <span>{unplugDormKwh} kWh / month saved</span>
-              <span style={{ color: '#64748b', fontWeight: 400 }}>~${Math.round(unplugDormKwh * 0.16)} off bills</span>
+              <span>{hostelPowerSavingKwh} units (kWh) saved / month</span>
+              <span style={{ color: '#64748b', fontWeight: 400 }}>Save ₹{Math.round(hostelPowerSavingKwh * 8)} on electricity</span>
             </div>
             <input
               type="range"
               min="0"
-              max="60"
+              max="40"
               step="5"
-              value={unplugDormKwh}
-              onChange={(e) => setUnplugDormKwh(Number(e.target.value))}
+              value={hostelPowerSavingKwh}
+              onChange={(e) => setHostelPowerSavingKwh(Number(e.target.value))}
               style={{ width: '100%', accentColor: '#d97706' }}
             />
           </div>
 
-          {/* Lever 4: Shopping & Thrifting */}
+          {/* Lever 4: Kabadiwala Scrap Diversion */}
           <div className="card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <h3 style={{ fontSize: '1.05rem', color: '#0f172a' }}>4. Thrift Instead of Fast Fashion</h3>
-              <span className="badge badge-purple">+{shoppingSavedKg} kg saved/yr</span>
+              <h3 style={{ fontSize: '1.05rem', color: '#0f172a' }}>4. Scrap to Kabadiwala / Raddi</h3>
+              <span className="badge badge-purple">+{wasteSavedKg} kg saved/yr</span>
             </div>
             <p style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '1rem' }}>
-              Replace brand-new garment purchases with thrift or clothing swaps:
+              Sort old assignments, boxes, and plastic bottles to informal scrap recyclers:
             </p>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', fontWeight: 700, color: '#7c3aed', marginBottom: '0.25rem' }}>
-              <span>{thriftGarments} garment / month thrifted</span>
-              <span style={{ color: '#64748b', fontWeight: 400 }}>Avoids virgin cotton & dyeing</span>
+              <span>{kabadiwalaRecyclingKg} kg paper/plastic diverted / mo</span>
+              <span style={{ color: '#64748b', fontWeight: 400 }}>Earn ₹40-60/mo</span>
             </div>
             <input
               type="range"
               min="0"
-              max="4"
-              value={thriftGarments}
-              onChange={(e) => setThriftGarments(Number(e.target.value))}
+              max="15"
+              value={kabadiwalaRecyclingKg}
+              onChange={(e) => setKabadiwalaRecyclingKg(Number(e.target.value))}
               style={{ width: '100%', accentColor: '#7c3aed' }}
             />
           </div>
 
         </div>
 
-        {/* SIMULATED IMPACT RESULTS COLUMN */}
+        {/* RESULTS COLUMN */}
         <div>
-          {/* Key Result Banner */}
           <div className="card" style={{
             background: 'linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%)',
             border: '2px solid #a7f3d0',
@@ -233,8 +228,8 @@ export default function SimulatorPage() {
             <div style={{ fontSize: '3rem', fontWeight: 800, color: '#059669', margin: '0.5rem 0' }}>
               -{totalProjectedSavings.toLocaleString()} <span style={{ fontSize: '1.25rem', fontWeight: 600 }}>kg CO₂e</span>
             </div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.375rem 0.875rem', backgroundColor: '#ffffff', borderRadius: '9999px', fontSize: '0.875rem', fontWeight: 700, color: '#059669', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-              <TrendingDown size={16} /> {percentageCut}% Total Footprint Reduction
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.375rem 0.875rem', backgroundColor: '#ffffff', borderRadius: '9999px', fontSize: '0.875rem', fontWeight: 700, color: '#059669' }}>
+              ✓ {percentageCut}% Total Footprint Reduction
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1.5rem', textAlign: 'left' }}>
@@ -248,8 +243,8 @@ export default function SimulatorPage() {
               </div>
             </div>
 
-            <div style={{ marginTop: '1.25rem', fontSize: '0.875rem', color: '#166534', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-              <TreePine size={18} /> Equivalent to planting <strong>{treesEquiv} mature trees</strong>
+            <div style={{ marginTop: '1.25rem', fontSize: '0.875rem', color: '#166534' }}>
+              🌳 Equivalent to planting <strong>{treesEquiv} mature Peepal/Neem trees</strong>
             </div>
           </div>
 
@@ -278,15 +273,6 @@ export default function SimulatorPage() {
               </ResponsiveContainer>
             </div>
           </div>
-
-          {/* Scientific Disclaimer Note */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginTop: '1rem', fontSize: '0.75rem', color: '#64748b' }}>
-            <AlertCircle size={15} style={{ flexShrink: 0, marginTop: '2px' }} />
-            <span>
-              Calculated using UK DEFRA (2023) passenger conversion factors and Poore & Nemecek dietary lifecycle benchmarks. Projected reductions represent estimated theoretical carbon savings based on self-reported inputs.
-            </span>
-          </div>
-
         </div>
 
       </div>

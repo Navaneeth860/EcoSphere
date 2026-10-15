@@ -51,12 +51,12 @@ export function CarbonProvider({ children }) {
       }
     });
     return {
-      transport: parseFloat(totals.transport.toFixed(1)),
-      energy: parseFloat(totals.energy.toFixed(1)),
-      food: parseFloat(totals.food.toFixed(1)),
-      shopping: parseFloat(totals.shopping.toFixed(1)),
-      waste: parseFloat(totals.waste.toFixed(1)),
-      total: parseFloat((totals.transport + totals.energy + totals.food + totals.shopping + totals.waste).toFixed(1))
+      transport: parseFloat(totals.transport.toFixed(2)),
+      energy: parseFloat(totals.energy.toFixed(2)),
+      food: parseFloat(totals.food.toFixed(2)),
+      shopping: parseFloat(totals.shopping.toFixed(2)),
+      waste: parseFloat(totals.waste.toFixed(2)),
+      total: parseFloat((totals.transport + totals.energy + totals.food + totals.shopping + totals.waste).toFixed(2))
     };
   }, [activities]);
 

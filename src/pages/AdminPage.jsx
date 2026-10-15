@@ -4,10 +4,7 @@ import {
   Users, 
   TrendingDown, 
   TreePine, 
-  Building2, 
   Download, 
-  BarChart2, 
-  CheckCircle2,
   Lock
 } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
@@ -16,29 +13,29 @@ import { useAuth } from '../context/AuthContext';
 export default function AdminPage() {
   const { currentUser } = useAuth();
 
-  // Aggregated anonymized campus dataset
   const campusMetrics = {
-    totalStudentsEnrolled: 4280,
-    activeAuditedStudents: 1845,
-    campusAnnualEmissionsAvoided: 142600, // kg CO2e
-    averagePerStudentFootprint: 2980, // kg CO2e (down from 3400)
-    treesEquivalent: 6550
+    totalStudentsEnrolled: 8400,
+    activeAuditedStudents: 3620,
+    campusAnnualEmissionsAvoided: 89400, // kg CO2e
+    averagePerStudentFootprint: 1720, // kg CO2e (down from 1850)
+    treesEquivalent: 4250
   };
 
   const departmentData = [
-    { dept: 'Engineering', participants: 620, avgFootprint: 2850, reduction: 14 },
-    { dept: 'Sciences', participants: 410, avgFootprint: 2790, reduction: 16 },
-    { dept: 'Business', participants: 350, avgFootprint: 3200, reduction: 9 },
-    { dept: 'Humanities', participants: 290, avgFootprint: 2650, reduction: 18 },
-    { dept: 'Arts & Design', participants: 175, avgFootprint: 2900, reduction: 12 },
+    { dept: 'Computer Science', participants: 850, avgFootprint: 1680, reduction: 14 },
+    { dept: 'Mechanical Engg', participants: 720, avgFootprint: 1790, reduction: 11 },
+    { dept: 'Civil & Environmental', participants: 680, avgFootprint: 1540, reduction: 18 },
+    { dept: 'Chemical Engg', participants: 590, avgFootprint: 1720, reduction: 12 },
+    { dept: 'Design & Humanities', participants: 410, avgFootprint: 1610, reduction: 15 },
+    { dept: 'Management Studies', participants: 370, avgFootprint: 1820, reduction: 9 },
   ];
 
   const campusCategoryDistribution = [
-    { name: 'Commute & Travel', value: 38, color: '#0284c7' },
-    { name: 'Campus Dining', value: 31, color: '#10b981' },
-    { name: 'Residence Electricity', value: 19, color: '#f59e0b' },
-    { name: 'Purchasing & Paper', value: 8, color: '#8b5cf6' },
-    { name: 'Solid Waste', value: 4, color: '#ef4444' }
+    { name: 'Commute (Metro/Bus/Scooter)', value: 42, color: '#0284c7' },
+    { name: 'Hostel Mess & Food', value: 32, color: '#10b981' },
+    { name: 'Hostel Electricity (CEA)', value: 18, color: '#f59e0b' },
+    { name: 'Clothing & Supplies', value: 5, color: '#8b5cf6' },
+    { name: 'Solid Waste / Landfill', value: 3, color: '#ef4444' }
   ];
 
   return (
@@ -59,7 +56,7 @@ export default function AdminPage() {
           </div>
           <h1 style={{ fontSize: '2.25rem', color: '#0f172a' }}>Campus Sustainability Analytics</h1>
           <p style={{ fontSize: '0.9375rem', color: '#64748b' }}>
-            Aggregated, privacy-preserving carbon emissions data across Greenfield State University.
+            Aggregated, privacy-preserving carbon emissions data across Indian university departments.
           </p>
         </div>
 
@@ -68,7 +65,7 @@ export default function AdminPage() {
             <Lock size={14} /> k-Anonymity Verified (k &ge; 50)
           </div>
           <button 
-            onClick={() => alert('Campus Sustainability Executive Report (PDF/CSV) generated.')}
+            onClick={() => alert('Campus Sustainability Executive Report (PDF/CSV) generated based on India GHG Program metrics.')}
             className="btn-primary"
           >
             <Download size={16} /> Export Board Report
@@ -80,25 +77,25 @@ export default function AdminPage() {
       <div className="grid grid-cols-4 gap-4" style={{ marginBottom: '2.5rem' }}>
         <div className="card">
           <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-            Participating Students
+            Audited Students
           </div>
           <div style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a' }}>
             {campusMetrics.activeAuditedStudents.toLocaleString()}
           </div>
           <div style={{ fontSize: '0.8125rem', color: '#059669', fontWeight: 600, marginTop: '0.25rem' }}>
-            43.1% campus adoption rate
+            43.1% student participation
           </div>
         </div>
 
         <div className="card">
           <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-            Campus Avoided CO₂e
+            Campus Avoided CO₂
           </div>
           <div style={{ fontSize: '2rem', fontWeight: 800, color: '#059669' }}>
             {(campusMetrics.campusAnnualEmissionsAvoided / 1000).toFixed(1)} <span style={{ fontSize: '1rem' }}>Metric Tons</span>
           </div>
           <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.25rem' }}>
-            Since semester launch
+            Via Metro & hostel conservation
           </div>
         </div>
 
@@ -110,19 +107,19 @@ export default function AdminPage() {
             {campusMetrics.averagePerStudentFootprint} <span style={{ fontSize: '1rem' }}>kg / yr</span>
           </div>
           <div style={{ fontSize: '0.8125rem', color: '#059669', fontWeight: 600, marginTop: '0.25rem' }}>
-            ↓ 12.3% vs previous academic year
+            ↓ 7.0% below national average
           </div>
         </div>
 
         <div className="card">
           <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-            Trees Equivalent
+            Peepal/Neem Trees Equiv
           </div>
           <div style={{ fontSize: '2rem', fontWeight: 800, color: '#16a34a' }}>
             {campusMetrics.treesEquivalent.toLocaleString()}
           </div>
           <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.25rem' }}>
-            Carbon offset equivalent
+            Native tree carbon equivalent
           </div>
         </div>
       </div>
@@ -134,14 +131,13 @@ export default function AdminPage() {
         gap: '1.5rem',
         marginBottom: '2.5rem'
       }}>
-        {/* Department Participation & Reductions */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
               <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Department Participation & Reductions</h3>
               <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Active student count by faculty</p>
             </div>
-            <span className="badge badge-emerald">Live Roster</span>
+            <span className="badge badge-emerald">Live Faculty Roster</span>
           </div>
 
           <div style={{ height: '270px', width: '100%' }}>
@@ -152,7 +148,7 @@ export default function AdminPage() {
                 <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
                 <Tooltip 
                   formatter={(val, name) => [
-                    name === 'participants' ? `${val} students` : `${val} kg CO₂e`,
+                    name === 'participants' ? `${val} students` : `${val} kg CO₂`,
                     name === 'participants' ? 'Audited Students' : 'Average Footprint'
                   ]}
                   contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
@@ -163,14 +159,13 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Campus Category Breakdown */}
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
               <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Campus Footprint Distribution</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Scope breakdown of university student population</p>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Breakdown of student community emissions</p>
             </div>
-            <span className="badge badge-blue">Aggregated</span>
+            <span className="badge badge-blue">India GHG Baseline</span>
           </div>
 
           <div style={{ height: '240px', width: '100%' }}>
@@ -201,7 +196,7 @@ export default function AdminPage() {
             {campusCategoryDistribution.map((item) => (
               <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem' }}>
                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: item.color }} />
-                <span>{item.name}: <strong>{item.value}%</strong></span>
+                <span>{item.name.split(' ')[0]}: <strong>{item.value}%</strong></span>
               </div>
             ))}
           </div>

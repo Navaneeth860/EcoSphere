@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Leaf, Heart, Globe, Shield, BookOpen } from 'lucide-react';
+import { Globe2, Heart, Shield, BookOpen } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -31,14 +31,14 @@ export default function Footer() {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Leaf size={18} strokeWidth={2.5} />
+                <Globe2 size={18} strokeWidth={2.3} />
               </div>
               <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>
-                Green<span style={{ color: '#059669' }}>Track</span>
+                Eco<span style={{ color: '#059669' }}>Sphere</span>
               </span>
             </div>
             <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6, marginBottom: '1.25rem' }}>
-              Empowering university students with scientific, AI-assisted carbon footprint tracking and accessible sustainable lifestyle choices.
+              Empowering Indian university students with scientific carbon tracking based on national emission guidelines.
             </p>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', color: '#059669', backgroundColor: '#ecfdf5', padding: '0.375rem 0.75rem', borderRadius: '9999px', fontWeight: 600 }}>
               <Shield size={14} /> 100% Student Privacy Preserved
@@ -48,10 +48,10 @@ export default function Footer() {
           {/* Col 2 */}
           <div>
             <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#0f172a', marginBottom: '1rem' }}>
-              Platform
+              Platform Navigation
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.625rem', fontSize: '0.875rem', color: '#64748b' }}>
-              <li><Link to="/dashboard" style={{ color: '#64748b', transition: 'color 0.2s' }}>Student Dashboard</Link></li>
+              <li><Link to="/dashboard" style={{ color: '#64748b' }}>Student Dashboard</Link></li>
               <li><Link to="/simulator" style={{ color: '#64748b' }}>What-If Scenario Lab</Link></li>
               <li><Link to="/ai-assistant" style={{ color: '#64748b' }}>AI Sustainability Coach</Link></li>
               <li><Link to="/goals" style={{ color: '#64748b' }}>Eco Challenges & Badges</Link></li>
@@ -62,26 +62,34 @@ export default function Footer() {
           {/* Col 3 */}
           <div>
             <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#0f172a', marginBottom: '1rem' }}>
-              Methodology & Standards
+              Govt & National Standards
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.625rem', fontSize: '0.875rem', color: '#64748b' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}><BookOpen size={14} color="#059669" /> UK DEFRA GHG Conversion Factors</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}><BookOpen size={14} color="#059669" /> US EPA eGRID Grid Emissions</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}><BookOpen size={14} color="#059669" /> Poore & Nemecek Dietary LCAs</li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}><Globe size={14} color="#059669" /> GHG Protocol Scope 1, 2, 3</li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                <BookOpen size={14} color="#059669" /> India GHG Program (WRI/TERI/CII)
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                <BookOpen size={14} color="#059669" /> Central Electricity Authority (CEA)
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                <BookOpen size={14} color="#059669" /> Automotive Research Assoc. of India (ARAI)
+              </li>
+              <li style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                <BookOpen size={14} color="#059669" /> Delhi Metro CDM Railway Factors
+              </li>
             </ul>
           </div>
 
           {/* Col 4 */}
           <div>
             <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#0f172a', marginBottom: '1rem' }}>
-              Campus Partnership
+              Campus Climate Action
             </h4>
             <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6, marginBottom: '1rem' }}>
-              GreenTrack is ready for campus-wide climate action plans and student sustainability initiatives.
+              Created for Indian institutions aiming for green campus ratings and net-zero student communities.
             </p>
             <div style={{ fontSize: '0.8125rem', color: '#475569', fontWeight: 600 }}>
-              Campus Climate Pledge • 2026 Edition
+              National Mission on Sustainable Habitat
             </div>
           </div>
         </div>
@@ -98,10 +106,10 @@ export default function Footer() {
           color: '#94a3b8'
         }}>
           <div>
-            © {new Date().getFullYear()} GreenTrack Platform. Built for Student Climate Action.
+            © {new Date().getFullYear()} EcoSphere Platform. Built for Indian Student Climate Action.
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-            Designed with <Heart size={14} color="#ef4444" fill="#ef4444" /> for a sustainable future.
+            Engineered with <Heart size={14} color="#ef4444" fill="#ef4444" /> for a sustainable India.
           </div>
         </div>
       </div>

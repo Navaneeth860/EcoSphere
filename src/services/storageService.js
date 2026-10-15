@@ -1,158 +1,160 @@
 /**
- * Local Storage Seed & Data Service for GreenTrack
+ * Local Storage Seed & Data Service for EcoSphere (Indian University Context)
  */
 
 export const INITIAL_USER = {
   id: 'usr_01',
-  name: 'Alex Rivera',
-  email: 'alex.rivera@campus.edu',
+  name: 'Aarav Sharma',
+  email: 'aarav.sharma@iitd.ac.in',
   role: 'student',
-  major: 'Environmental Engineering & Data Science',
-  university: 'Greenfield State University',
-  joinedDate: '2024-09-01',
+  major: 'B.Tech in Computer Science & Environmental Systems',
+  university: 'Indian Institute of Technology (IIT Delhi)',
+  joinedDate: '2024-08-01',
   avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
   hasCompletedOnboarding: true
 };
 
 export const INITIAL_ONBOARDING_DATA = {
-  commuteMode: 'bus',
-  commuteDistanceKm: 6.5,
-  housingType: 'dorm_room',
-  electricityKwh: 120,
-  dietType: 'flexitarian',
-  clothingItemsPerMonth: 2,
+  commuteMode: 'metro',
+  goingDistanceKm: 8.5,
+  comingDistanceKm: 8.5,
+  commuteDaysPerWeek: 5,
+  housingType: 'hostel_room',
+  electricityKwh: 65,
+  dietType: 'pure_veg',
+  clothingItemsPerMonth: 1,
   thriftingPref: 'occasional',
-  wasteBagsPerWeek: 2,
-  recyclesRegularly: true
+  wasteBagsPerWeek: 1.5,
+  recyclesRegularly: true // Kabadiwala / hostel recycling bin
 };
 
 export const INITIAL_ACTIVITIES = [
   {
     id: 'act_101',
     category: 'transport',
-    subtype: 'bus',
-    label: 'Campus Express Bus Ride',
-    quantity: 13,
+    subtype: 'metro',
+    label: 'Delhi Metro Yellow Line (Hauz Khas to Vishwavidyalaya)',
+    quantity: 17,
     unit: 'km',
-    co2Kg: 1.157,
+    co2Kg: 0.213,
     date: '2026-10-14',
-    note: 'Round trip from off-campus library'
+    note: 'Round trip college commute via Metro Rail'
   },
   {
     id: 'act_102',
     category: 'food',
-    subtype: 'vegetarian',
-    label: 'Meatless Campus Cafeteria Lunch',
+    subtype: 'pure_veg',
+    label: 'Campus Hostel Mess Lunch (Roti, Dal Tadka, Rice & Sabzi)',
     quantity: 1,
     unit: 'day',
-    co2Kg: 2.5,
+    co2Kg: 1.8,
     date: '2026-10-14',
-    note: 'Tofu quinoa bowl and apple'
+    note: 'Pure vegetarian mess meal'
   },
   {
     id: 'act_103',
     category: 'transport',
-    subtype: 'bicycle',
-    label: 'Biked to Engineering Lab',
-    quantity: 4,
+    subtype: 'auto_cng',
+    label: 'Auto Rickshaw (CNG) from Metro Station to Campus Gate',
+    quantity: 3.5,
     unit: 'km',
-    co2Kg: 0.0,
+    co2Kg: 0.377,
     date: '2026-10-13',
-    note: 'Zero emission trip!'
+    note: 'Shared CNG auto ride'
   },
   {
     id: 'act_104',
-    category: 'shopping',
-    subtype: 'clothing_thrift',
-    label: 'Thrifted Winter Jacket',
-    quantity: 1,
-    unit: 'item',
-    co2Kg: 1.2,
-    date: '2026-10-12',
-    note: 'Bought at university charity thrift fair'
+    category: 'transport',
+    subtype: 'bicycle',
+    label: 'Cycled inside campus to Central Library',
+    quantity: 3,
+    unit: 'km',
+    co2Kg: 0.0,
+    date: '2026-10-13',
+    note: 'Campus green cycle sharing'
   },
   {
     id: 'act_105',
-    category: 'energy',
-    subtype: 'dorm_room',
-    label: 'Monthly Dorm Electricity Allotment',
-    quantity: 110,
-    unit: 'kWh',
-    co2Kg: 42.35,
-    date: '2026-10-01',
-    note: 'October utility apportionment'
+    category: 'shopping',
+    subtype: 'thrift_clothes',
+    label: 'Thrifted Kurta / Denim from Street Fair',
+    quantity: 1,
+    unit: 'item',
+    co2Kg: 0.9,
+    date: '2026-10-12',
+    note: 'Second-hand student flea market'
   },
   {
     id: 'act_106',
-    category: 'food',
-    subtype: 'vegan',
-    label: 'Full Plant-Based Sunday',
-    quantity: 1,
-    unit: 'day',
-    co2Kg: 1.5,
-    date: '2026-10-08',
-    note: 'Oatmeal, lentil soup, stir fry'
+    category: 'energy',
+    subtype: 'hostel_room',
+    label: 'Hostel Room Monthly Electricity Share',
+    quantity: 60,
+    unit: 'kWh',
+    co2Kg: 43.2,
+    date: '2026-10-01',
+    note: 'Fan, LED study lamp, and laptop charging (CEA 0.720 factor)'
   },
   {
     id: 'act_107',
     category: 'waste',
-    subtype: 'recycled_kg',
-    label: 'Paper & Can Recycling Drop-off',
-    quantity: 5,
+    subtype: 'kabadiwala_recycled',
+    label: 'Semester Raddi & Plastic bottles given to Kabadiwala',
+    quantity: 8,
     unit: 'kg',
-    co2Kg: 0.4,
+    co2Kg: 0.48,
     date: '2026-10-10',
-    note: 'Emptied recycling station'
+    note: 'Responsible paper and can recycling'
   }
 ];
 
 export const INITIAL_GOALS = [
   {
     id: 'goal_01',
-    title: 'Commute by Bike or Walk 3x a Week',
+    title: 'Commute by Metro or Bus 4 days a week',
     category: 'transport',
-    targetValue: 12,
-    currentValue: 8,
+    targetValue: 16,
+    currentValue: 12,
     unit: 'trips',
     deadline: '2026-10-31',
     status: 'in_progress',
-    co2SavingsKg: 18.5
+    co2SavingsKg: 24.5
   },
   {
     id: 'goal_02',
-    title: 'Plant-Based Lunches (Meatless Mondays)',
+    title: 'Pure Desi Veg Mess Meals (Avoid Fast Food Burgers)',
     category: 'food',
-    targetValue: 4,
-    currentValue: 3,
-    unit: 'meals',
+    targetValue: 6,
+    currentValue: 5,
+    unit: 'days',
     deadline: '2026-10-28',
     status: 'in_progress',
-    co2SavingsKg: 14.1
+    co2SavingsKg: 12.0
   },
   {
     id: 'goal_03',
-    title: 'Zero New Fast-Fashion Purchases This Month',
-    category: 'shopping',
-    targetValue: 1,
-    currentValue: 1,
-    unit: 'month',
+    title: 'Give all semester exam waste & paper to Kabadiwala',
+    category: 'waste',
+    targetValue: 10,
+    currentValue: 10,
+    unit: 'kg',
     deadline: '2026-10-31',
     status: 'achieved',
-    co2SavingsKg: 30.0
+    co2SavingsKg: 18.0
   }
 ];
 
 export const INITIAL_BADGES = [
-  { id: 'b1', name: 'Pedal Pioneer', desc: 'Logged 5 bicycle commutes', icon: 'Bike', unlocked: true, date: '2026-10-10' },
-  { id: 'b2', name: 'Leaf Eater', desc: 'Chose plant-based meals 5 times', icon: 'Salad', unlocked: true, date: '2026-10-12' },
-  { id: 'b3', name: 'Thrift Master', desc: 'Opted for secondhand items', icon: 'ShoppingBag', unlocked: true, date: '2026-10-12' },
-  { id: 'b4', name: 'Energy Squeezer', desc: 'Kept monthly electricity under 100 kWh', icon: 'Zap', unlocked: false },
-  { id: 'b5', name: 'Eco Ambassador', desc: 'Maintained 30 days of footprint tracking', icon: 'Award', unlocked: false }
+  { id: 'b1', name: 'Metro Commuter', desc: 'Used Metro / Train for 10 trips', icon: 'Train', unlocked: true, date: '2026-10-10' },
+  { id: 'b2', name: 'Desi Green Eater', desc: 'Chose nutritious Indian vegetarian thali', icon: 'Salad', unlocked: true, date: '2026-10-12' },
+  { id: 'b3', name: 'Raddi Recycler', desc: 'Sorted recyclables to the Kabadiwala', icon: 'Recycle', unlocked: true, date: '2026-10-12' },
+  { id: 'b4', name: 'Hostel Power Saver', desc: 'Turned off hostel switches before leaving', icon: 'Zap', unlocked: true },
+  { id: 'b5', name: 'Campus Eco Hero', desc: 'Maintained 30 days of footprint tracking', icon: 'Award', unlocked: false }
 ];
 
 export function getStoredData(key, fallback) {
   try {
-    const raw = localStorage.getItem(`greentrack_${key}`);
+    const raw = localStorage.getItem(`ecosphere_${key}`);
     return raw ? JSON.parse(raw) : fallback;
   } catch (e) {
     return fallback;
@@ -161,7 +163,7 @@ export function getStoredData(key, fallback) {
 
 export function setStoredData(key, value) {
   try {
-    localStorage.setItem(`greentrack_${key}`, JSON.stringify(value));
+    localStorage.setItem(`ecosphere_${key}`, JSON.stringify(value));
   } catch (e) {
     console.error('Storage write error', e);
   }

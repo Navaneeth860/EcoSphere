@@ -1,71 +1,67 @@
 /**
- * Deterministic AI Advisor Service for GreenTrack
- * Produces personalized, mathematically grounded recommendations
- * based on student's actual emission profile and university constraints.
+ * Deterministic AI Advisor Service for EcoSphere (Indian College Lifestyle)
+ * Grounded in Govt of India, India GHG Program and Central Electricity Authority metrics.
  */
 
 export function generateSmartRecommendations(baseline, activities) {
   const recommendations = [];
 
-  // Identify highest category
   const sorted = Object.entries(baseline.breakdown).sort((a, b) => b[1] - a[1]);
-  const highestCategory = sorted[0]; // [categoryName, kgValue]
+  const highestCategory = sorted[0];
 
-  // Food recommendation
-  if (baseline.breakdown.food > 900) {
-    recommendations.push({
-      id: 'rec_food_01',
-      title: 'Adopt Meatless Weekdays or Plant-Forward Dining',
-      category: 'food',
-      impactKg: 380,
-      costSavings: '$35/month',
-      difficulty: 'Easy',
-      summary: 'Dining halls offer extensive legume and grain bowls. Swapping meat 3 days a week avoids ~380 kg CO₂e annually without nutritional compromise.',
-      sourceRef: 'Poore & Nemecek (Science 2018)'
-    });
-  }
-
-  // Transport recommendation
-  if (baseline.breakdown.transport > 500) {
+  // Transport recommendation (Shift to Metro or City Bus)
+  if (baseline.breakdown.transport > 300) {
     recommendations.push({
       id: 'rec_trans_01',
-      title: 'Switch 2 Commute Days to Campus Transit or Bike',
+      title: 'Shift 3 Days to Metro Rail or DTC/BEST/BMTC Buses',
       category: 'transport',
-      impactKg: 190,
-      costSavings: '$40/month in fuel & parking',
-      difficulty: 'Medium',
-      summary: 'Taking the campus shuttle or cycling on Tuesdays & Thursdays cuts solo motor vehicle mileage by 40%, preventing 190 kg CO₂e.',
-      sourceRef: 'UK DEFRA Transport (2023)'
+      impactKg: 140,
+      costSavings: '₹1,200/month in petrol & parking',
+      difficulty: 'Easy',
+      summary: 'Per the India GHG Program, Metro Rail and electric public buses emit only 0.0125 to 0.0152 kg CO₂/passenger-km, cutting emissions by over 65% compared to petrol scooters or cabs.',
+      sourceRef: 'India GHG Program Table 5.4.1'
     });
   }
 
-  // Energy recommendation
+  // Food recommendation
+  if (baseline.breakdown.food > 700) {
+    recommendations.push({
+      id: 'rec_food_01',
+      title: 'Embrace Campus Mess Vegetarian Thali Days',
+      category: 'food',
+      impactKg: 280,
+      costSavings: '₹800/month off canteen bills',
+      difficulty: 'Easy',
+      summary: 'Traditional Indian thalis (Dal, Roti, Seasonal Sabzi, Curd) require 1/3rd of the agricultural carbon intensity of frequent broiler chicken or red meat meals.',
+      sourceRef: 'Indian Dietary LCA & Food Carbon Hub'
+    });
+  }
+
+  // Energy recommendation (CEA Grid factor 0.720 kg/kWh)
   if (baseline.breakdown.energy > 400) {
     recommendations.push({
       id: 'rec_energy_01',
-      title: 'Smart Power Strip & Cold Laundry Wash',
+      title: 'Hostel Geyser & Standby Switch Discipline',
       category: 'energy',
-      impactKg: 95,
-      costSavings: '$15/month',
+      impactKg: 110,
+      costSavings: '₹400/month shared savings',
       difficulty: 'Easy',
-      summary: 'Eliminate phantom standby loads from gaming consoles and mini-fridges. Washing clothes in 30°C/cold water saves ~75% of cycle electricity.',
-      sourceRef: 'US EPA Energy Star & eGRID'
+      summary: 'India’s electricity grid has a carbon factor of 0.720 kg CO₂/kWh (CEA). Switching off idle laptop chargers, immersion rods, and water coolers when leaving the hostel saves immediate emissions.',
+      sourceRef: 'Central Electricity Authority (CEA) v20'
     });
   }
 
-  // Shopping / Goods
-  if (baseline.breakdown.shopping > 150) {
-    recommendations.push({
-      id: 'rec_shop_01',
-      title: 'Campus Thrift Fairs & Clothing Swaps',
-      category: 'shopping',
-      impactKg: 120,
-      costSavings: '$50+/month',
-      difficulty: 'Easy',
-      summary: 'Thrifted garments carry a life-cycle carbon footprint 90% lower than brand-new fast fashion pieces.',
-      sourceRef: 'WRAP UK Textile Carbon Report'
-    });
-  }
+  // Waste & Kabadiwala
+  recommendations.push({
+    id: 'rec_waste_01',
+    title: 'Sort Semester Notes & Bottles to the Kabadiwala',
+    category: 'waste',
+    impactKg: 45,
+    costSavings: 'Earn ₹200-₹300 cash/semester',
+    difficulty: 'Easy',
+    summary: 'Directing paper and clean plastics to the informal circular recycling ecosystem prevents municipal landfill methane generation.',
+    sourceRef: 'Swachh Bharat Urban Recycling Benchmark'
+  });
 
   return {
     highestCategory: highestCategory[0],
@@ -77,57 +73,59 @@ export function generateSmartRecommendations(baseline, activities) {
 export function answerStudentQuestion(query, baseline) {
   const q = query.toLowerCase();
 
-  if (q.includes('dorm') || q.includes('electricity') || q.includes('energy') || q.includes('power')) {
+  if (q.includes('metro') || q.includes('scooter') || q.includes('activa') || q.includes('bus') || q.includes('auto')) {
     return {
-      answer: `In campus dorms, heating/cooling and mini-fridges consume the majority of power. Your energy footprint is currently ~${baseline.breakdown.energy} kg CO₂e/yr. You can reduce this by:
-1. Setting your mini-fridge dial to medium rather than maximum cold.
-2. Using a smart power strip to prevent phantom load when laptops and displays are in sleep mode.
-3. Air-drying heavy hoodies or using cold-water cycles in the student laundry room.`,
-      estimatedSavings: '60–110 kg CO₂e / year',
-      tags: ['Energy', 'Dorm Hacks', 'Zero Cost']
+      answer: `According to the official India Specific Road Transport Emission Factors (India GHG Program Table 5.1.1 & 5.4.1):
+- Petrol Scooter (<110cc Activa/Jupiter): 0.0368 kg CO₂/km
+- City Public Bus: 0.01516 kg CO₂/passenger-km
+- Metro Rail (DMRC/Namma): ~0.0125 kg CO₂/passenger-km
+- CNG Auto Rickshaw: 0.1077 kg CO₂/km
+
+Switching from a daily solo Activa ride (16 km round trip) to the Metro saves ~115 kg CO₂ annually and cuts ₹1,400+ per month in fuel costs!`,
+      estimatedSavings: '115–180 kg CO₂ / year',
+      tags: ['Metro', 'India GHG Program', 'Student Transit Pass']
     };
   }
 
-  if (q.includes('food') || q.includes('diet') || q.includes('meal') || q.includes('vegan') || q.includes('meat')) {
+  if (q.includes('hostel') || q.includes('electricity') || q.includes('pg') || q.includes('room') || q.includes('energy')) {
     return {
-      answer: `Food represents ~${baseline.breakdown.food} kg CO₂e of your annual budget. Because ruminant meat (beef/lamb) generates ~60 kg CO₂e per kg of food compared to under 1.5 kg for lentils and beans, even small changes compound:
-- Committing to "Meatless Mondays" cuts ~68 kg CO₂e annually.
-- Swapping cow's milk for oat or soy milk saves ~120 kg CO₂e per year if you consume coffee or cereal daily.`,
-      estimatedSavings: '150–400 kg CO₂e / year',
-      tags: ['Diet', 'Dining Hall', 'Nutrition']
+      answer: `Because India's grid is predominantly thermal powered, 1 kWh of electricity generates ~0.720 kg CO₂ (Central Electricity Authority).
+In your college hostel or PG:
+1. Heating water using instant geysers consumes ~2 kWh per 15 minutes (~1.4 kg CO₂).
+2. Leaving ceiling fans and monitors running while attending classes wastes 20–30 units/month.
+3. Air-drying clothes on the hostel balcony instead of machine drying saves 100% of cycle electricity.`,
+      estimatedSavings: '80–150 kg CO₂ / year',
+      tags: ['Hostel Hacks', 'CEA Grid', 'Zero Cost']
     };
   }
 
-  if (q.includes('commute') || q.includes('bike') || q.includes('bus') || q.includes('transit') || q.includes('car')) {
+  if (q.includes('mess') || q.includes('thali') || q.includes('food') || q.includes('veg') || q.includes('chicken') || q.includes('diet')) {
     return {
-      answer: `Your commute accounts for ~${baseline.breakdown.transport} kg CO₂e/yr. If you currently ride a bus or drive:
-- Biking or walking for trips under 3 km has 0 operational emissions.
-- Carpooling with 1 peer cuts passenger-km emissions in half (from 0.192 to 0.096 kg CO₂e/km).
-- Most student IDs grant free or discounted campus bus passes.`,
-      estimatedSavings: '120–250 kg CO₂e / year',
-      tags: ['Commute', 'Active Transit', 'Campus Perks']
+      answer: `The classic Indian Vegetarian Mess Thali (Roti, Chana/Arhar Dal, Aloo Gobi, Steamed Rice, Dahi) has an ultra-low emission score of ~1.8 kg CO₂e/day.
+- Frequent mutton/beef generates 15x–30x more carbon than lentils.
+- Broiler chicken thalis generate ~4.8 kg CO₂e/day.
+Even choosing vegetarian meals from Monday to Friday saves ~280 kg CO₂ annually without compromising your protein intake (rajma, chole, soya chunks, paneer, and eggs).`,
+      estimatedSavings: '200–350 kg CO₂ / year',
+      tags: ['Desi Thali', 'Hostel Mess', 'Nutrition']
     };
   }
 
-  if (q.includes('budget') || q.includes('save money') || q.includes('cheap') || q.includes('cost')) {
+  if (q.includes('kabadiwala') || q.includes('raddi') || q.includes('waste') || q.includes('recycle')) {
     return {
-      answer: `Being eco-friendly as a student actually saves money rather than costing more:
-1. Campus bus pass (Free with student ID) saves ~$60/mo in gas and parking decals.
-2. Thrift store clothing and university free-swap fairs save ~$40–$80/mo over fast fashion.
-3. Plant-rich pantry staples (beans, lentils, rice, tofu) cost roughly 40% less per protein gram than beef or deli meats.`,
-      estimatedSavings: 'Save $80–$150/mo while cutting 200+ kg CO₂e',
-      tags: ['Student Budget', 'Financial Sustainability']
+      answer: `The Indian Kabadiwala network is one of the world's most efficient circular economy models!
+- Unsorted paper dumped in landfills degrades into methane (0.62 kg CO₂e/kg).
+- Paper recycled via Kabadiwala saves 90% of energy and reduces virgin wood pulp harvesting (0.06 kg CO₂e/kg).
+- Plus, students earn ₹14–₹18/kg for old newspapers, notebook scrap, and plastic bottles!`,
+      estimatedSavings: '40–60 kg CO₂ / year + Pocket Money',
+      tags: ['Kabadiwala', 'Circular Economy', 'Zero Waste']
     };
   }
 
-  // Default fallback answer
   return {
-    answer: `Based on your audited profile (Annual total: ${baseline.total} kg CO₂e), your highest opportunity for reduction lies in ${sortedCategoryName(baseline.breakdown)}. 
-
-To make the greatest immediate impact without disrupting your study schedule:
-1. Target your top category first.
-2. Try the What-If Simulator to find your optimal balance.
-3. Set one achievable goal in the Goals tab and track it for 2 weeks.`,
+    answer: `Based on your Indian college footprint profile (${baseline.total} kg CO₂e/yr), your greatest reduction opportunity is in ${sortedCategoryName(baseline.breakdown)}.
+1. Use Metro or college buses for round-trip commutes.
+2. Unplug hostel devices when leaving for lectures.
+3. Commit to 1 achievable challenge in the Goals section!`,
     estimatedSavings: 'Up to 25% footprint reduction',
     tags: ['Overview', 'Custom Strategy']
   };
@@ -136,5 +134,5 @@ To make the greatest immediate impact without disrupting your study schedule:
 function sortedCategoryName(breakdown) {
   const keys = Object.keys(breakdown);
   keys.sort((a, b) => breakdown[b] - breakdown[a]);
-  return keys[0] ? keys[0].toUpperCase() : 'TRANSPORTATION';
+  return keys[0] ? keys[0].toUpperCase() : 'COMMUTE';
 }

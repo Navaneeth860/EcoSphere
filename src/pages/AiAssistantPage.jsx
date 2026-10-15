@@ -3,12 +3,7 @@ import {
   Sparkles, 
   Send, 
   Bot, 
-  User, 
-  Lightbulb, 
-  ArrowRight, 
-  CheckCircle, 
   ShieldCheck, 
-  DollarSign, 
   Clock 
 } from 'lucide-react';
 import { useCarbon } from '../context/CarbonContext';
@@ -21,8 +16,8 @@ export default function AiAssistantPage() {
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: `Hi Alex! I'm your GreenTrack AI Sustainability Coach. I've analyzed your annual profile (${baseline.total.toLocaleString()} kg CO₂e). Your largest footprint category right now is ${highestCategory.toUpperCase()} (~${baseline.breakdown[highestCategory]} kg). How can I help you optimize your carbon habits today?`,
-      tags: ['Verified Data', 'Personalized']
+      text: `Namaste Aarav! I'm your EcoSphere AI Sustainability Coach. I've analyzed your college profile (${baseline.total.toLocaleString()} kg CO₂e). In the Indian university context, your largest impact area is ${highestCategory.toUpperCase()} (~${baseline.breakdown[highestCategory]} kg). How can I help you optimize your metro commute, hostel energy, or mess diet today?`,
+      tags: ['India GHG Program Grounded', 'College Context']
     }
   ]);
 
@@ -33,7 +28,6 @@ export default function AiAssistantPage() {
     const query = textToSend || inputQuery;
     if (!query.trim()) return;
 
-    // Add user message
     const userMsg = { sender: 'user', text: query };
     setMessages(prev => [...prev, userMsg]);
     setInputQuery('');
@@ -51,14 +45,14 @@ export default function AiAssistantPage() {
         }
       ]);
       setIsTyping(false);
-    }, 600);
+    }, 550);
   };
 
   const samplePrompts = [
-    'How can I save electricity and money in my dorm room?',
-    'What are the best low-carbon dining hall options?',
-    'How do I reduce my commute footprint without owning a bike?',
-    'How much money can a student save by going green?'
+    'How does taking the Delhi/Namma Metro compare to my Activa scooter?',
+    'What are the cheapest hostel electricity saving hacks?',
+    'Why is a traditional Indian vegetarian thali low in carbon?',
+    'How can selling old books to a Kabadiwala help the environment?'
   ];
 
   return (
@@ -67,11 +61,11 @@ export default function AiAssistantPage() {
       {/* Header */}
       <div style={{ marginBottom: '2rem' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', color: '#059669', fontSize: '0.8125rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-          <Sparkles size={16} /> Intelligent Climate Coach
+          <Sparkles size={16} /> Campus Eco Advisor
         </div>
         <h1 style={{ fontSize: '2.25rem', color: '#0f172a' }}>AI Sustainability Assistant</h1>
         <p style={{ fontSize: '0.9375rem', color: '#64748b' }}>
-          Real-time, scientifically grounded lifestyle recommendations tailored to student budgets and routines.
+          Real-time, scientifically grounded lifestyle recommendations tailored for Indian colleges and hostels.
         </p>
       </div>
 
@@ -108,15 +102,15 @@ export default function AiAssistantPage() {
                 <Bot size={20} />
               </div>
               <div>
-                <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#0f172a' }}>GreenTrack Advisor</div>
+                <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#0f172a' }}>EcoSphere Indian Campus Coach</div>
                 <div style={{ fontSize: '0.75rem', color: '#059669', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981' }} /> Connected to Student Profile
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981' }} /> Connected to Aarav's Profile
                 </div>
               </div>
             </div>
 
             <span className="badge badge-emerald" style={{ fontSize: '0.7rem' }}>
-              GHG Grounded
+              🇮🇳 India GHG Grounded
             </span>
           </div>
 
@@ -178,7 +172,7 @@ export default function AiAssistantPage() {
                       fontWeight: 700,
                       fontSize: '0.8125rem'
                     }}>
-                      🌱 Potential Savings: {m.savings}
+                      🌱 Estimated Savings: {m.savings}
                     </div>
                   )}
 
@@ -203,7 +197,7 @@ export default function AiAssistantPage() {
 
             {isTyping && (
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', color: '#64748b', fontSize: '0.8125rem', marginLeft: '2.75rem' }}>
-                <span className="badge badge-emerald">Analyzing calculations...</span>
+                <span className="badge badge-emerald">Analyzing Indian GHG factors...</span>
               </div>
             )}
           </div>
@@ -222,8 +216,7 @@ export default function AiAssistantPage() {
                   backgroundColor: '#f1f5f9',
                   color: '#475569',
                   borderRadius: '9999px',
-                  fontWeight: 600,
-                  transition: 'background-color 0.15s'
+                  fontWeight: 600
                 }}
               >
                 {p}
@@ -247,7 +240,7 @@ export default function AiAssistantPage() {
           >
             <input
               type="text"
-              placeholder="Ask about your footprint, dorm energy, campus meals..."
+              placeholder="Ask about Metro emissions, hostel electricity, or mess food..."
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value)}
               className="form-input"
@@ -268,10 +261,10 @@ export default function AiAssistantPage() {
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
-              <h3 style={{ fontSize: '1.25rem', color: '#0f172a' }}>Personalized Action Plan</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Curated based on your highest-emission categories</p>
+              <h3 style={{ fontSize: '1.25rem', color: '#0f172a' }}>College Action Plan</h3>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Curated for your highest-impact categories</p>
             </div>
-            <span className="badge badge-emerald">{recommendations.length} Recommendations</span>
+            <span className="badge badge-emerald">{recommendations.length} Action Items</span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -310,7 +303,7 @@ export default function AiAssistantPage() {
                   fontSize: '0.8125rem'
                 }}>
                   <span style={{ fontWeight: 700, color: '#166534' }}>
-                    Avoids ~{rec.impactKg} kg CO₂e / yr
+                    Avoids ~{rec.impactKg} kg CO₂ / yr
                   </span>
                   <span style={{ fontSize: '0.7rem', color: '#15803d' }}>
                     Ref: {rec.sourceRef}
@@ -320,7 +313,6 @@ export default function AiAssistantPage() {
             ))}
           </div>
 
-          {/* Privacy Note */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1.5rem', fontSize: '0.8125rem', color: '#64748b' }}>
             <ShieldCheck size={16} color="#059669" />
             <span>All AI prompts are processed client-side with zero student PII transmitted.</span>

@@ -22,12 +22,12 @@ export default function LoginPage() {
   };
 
   const handleQuickDemoStudent = () => {
-    login('aarav.sharma@iitd.ac.in', 'demo123', 'student');
+    login('chetan.rao.cs23@bmsce.ac.in', 'demo123', 'student');
     navigate('/dashboard');
   };
 
   const handleQuickDemoAdmin = () => {
-    login('sustainability@iitd.ac.in', 'admin123', 'admin');
+    login('sustainability.dean@bmsce.ac.in', 'admin123', 'admin');
     navigate('/admin');
   };
 
@@ -58,7 +58,7 @@ export default function LoginPage() {
           </div>
           <h2 style={{ fontSize: '1.75rem', color: '#0f172a', marginBottom: '0.5rem' }}>EcoSphere Login</h2>
           <p style={{ fontSize: '0.875rem', color: '#64748b' }}>
-            Sign in to track your college & hostel carbon footprint
+            B.M.S. College of Engineering (BMSCE) Campus Hub
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={role === 'admin' ? 'dean.sustainability@iitd.ac.in' : 'student@iitd.ac.in'}
+                placeholder={role === 'admin' ? 'sustainability.dean@bmsce.ac.in' : 'chetan.rao.cs23@bmsce.ac.in'}
                 className="form-input"
                 style={{ paddingLeft: '2.5rem' }}
               />
@@ -160,7 +160,7 @@ export default function LoginPage() {
               className="btn-soft"
               style={{ width: '100%', justifyContent: 'center', fontSize: '0.8125rem' }}
             >
-              <UserCheck size={16} /> Load Indian Student (Aarav Sharma - IIT Delhi)
+              <UserCheck size={16} /> Load BMSCE Student (Chetan Rao)
             </button>
             <button
               type="button"
@@ -168,7 +168,7 @@ export default function LoginPage() {
               className="btn-secondary"
               style={{ width: '100%', justifyContent: 'center', fontSize: '0.8125rem' }}
             >
-              Load Campus Sustainability Dean
+              Load BMSCE Campus Sustainability Dean
             </button>
           </div>
         </div>

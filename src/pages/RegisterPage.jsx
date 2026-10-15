@@ -7,7 +7,7 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [university, setUniversity] = useState('Indian Institute of Technology (IIT Delhi)');
+  const [university, setUniversity] = useState('B.M.S. College of Engineering (BMSCE), Bengaluru');
   const [role, setRole] = useState('student');
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ export default function RegisterPage() {
             Join EcoSphere
           </h2>
           <p style={{ fontSize: '0.875rem', color: '#64748b' }}>
-            Calculate your Indian college carbon footprint in under 2 minutes
+            B.M.S. College of Engineering (BMSCE), Basavanagudi
           </p>
         </div>
 
@@ -60,7 +60,7 @@ export default function RegisterPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Aarav Sharma / Ananya Patel"
+                placeholder="e.g. Chetan Rao / Sneha Hegde"
                 className="form-input"
                 style={{ paddingLeft: '2.5rem' }}
               />
@@ -69,14 +69,14 @@ export default function RegisterPage() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">College Email ID (.ac.in / .edu.in)</label>
+            <label className="form-label">College Email ID (.bmsce.ac.in)</label>
             <div style={{ position: 'relative' }}>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="student@iitd.ac.in"
+                placeholder="chetan.rao.cs23@bmsce.ac.in"
                 className="form-input"
                 style={{ paddingLeft: '2.5rem' }}
               />
@@ -92,7 +92,6 @@ export default function RegisterPage() {
                 required
                 value={university}
                 onChange={(e) => setUniversity(e.target.value)}
-                placeholder="e.g. IIT Delhi, BITS Pilani, NIT Trichy, Delhi University"
                 className="form-input"
                 style={{ paddingLeft: '2.5rem' }}
               />
@@ -117,7 +116,7 @@ export default function RegisterPage() {
           </div>
 
           <button type="submit" className="btn-primary" style={{ width: '100%', padding: '0.75rem', marginTop: '0.75rem' }}>
-            Start College Baseline Survey <ArrowRight size={16} />
+            Start BMSCE Baseline Survey <ArrowRight size={16} />
           </button>
         </form>
 

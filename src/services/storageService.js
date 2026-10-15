@@ -1,14 +1,14 @@
 /**
- * Local Storage Seed & Data Service for EcoSphere (Indian University Context)
+ * Local Storage Seed & Data Service for EcoSphere (BMSCE Bengaluru, South Karnataka Context)
  */
 
 export const INITIAL_USER = {
   id: 'usr_01',
-  name: 'Aarav Sharma',
-  email: 'aarav.sharma@iitd.ac.in',
+  name: 'Chetan Rao',
+  email: 'chetan.rao.cs23@bmsce.ac.in',
   role: 'student',
-  major: 'B.Tech in Computer Science & Environmental Systems',
-  university: 'Indian Institute of Technology (IIT Delhi)',
+  major: 'B.E. Computer Science & Engineering (Batch of 2026)',
+  university: 'B.M.S. College of Engineering (BMSCE), Bull Temple Road, Basavanagudi, Bengaluru',
   joinedDate: '2024-08-01',
   avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
   hasCompletedOnboarding: true
@@ -16,16 +16,16 @@ export const INITIAL_USER = {
 
 export const INITIAL_ONBOARDING_DATA = {
   commuteMode: 'metro',
-  goingDistanceKm: 8.5,
-  comingDistanceKm: 8.5,
+  goingDistanceKm: 7.5, // e.g. Jayanagar / Banashankari to National College / BMSCE
+  comingDistanceKm: 7.5,
   commuteDaysPerWeek: 5,
-  housingType: 'hostel_room',
-  electricityKwh: 65,
-  dietType: 'pure_veg',
+  housingType: 'hostel_room', // BMSCE Campus Hostel, Bull Temple Road
+  electricityKwh: 55,
+  dietType: 'pure_veg', // South Indian breakfast & mess lunch
   clothingItemsPerMonth: 1,
   thriftingPref: 'occasional',
   wasteBagsPerWeek: 1.5,
-  recyclesRegularly: true // Kabadiwala / hostel recycling bin
+  recyclesRegularly: true // Local Gujri shop / BBMP dry waste sorting
 };
 
 export const INITIAL_ACTIVITIES = [
@@ -33,123 +33,123 @@ export const INITIAL_ACTIVITIES = [
     id: 'act_101',
     category: 'transport',
     subtype: 'metro',
-    label: 'Delhi Metro Yellow Line (Hauz Khas to Vishwavidyalaya)',
-    quantity: 17,
+    label: 'Namma Metro Green Line (Banashankari to National College / Basavanagudi)',
+    quantity: 15,
     unit: 'km',
-    co2Kg: 0.213,
+    co2Kg: 0.188,
     date: '2026-10-14',
-    note: 'Round trip college commute via Metro Rail'
+    note: 'Round trip college commute to BMSCE via Namma Metro'
   },
   {
     id: 'act_102',
     category: 'food',
     subtype: 'pure_veg',
-    label: 'Campus Hostel Mess Lunch (Roti, Dal Tadka, Rice & Sabzi)',
+    label: 'BMSCE Canteen & Vidyarthi Bhavan Dosa + Filter Coffee',
     quantity: 1,
     unit: 'day',
-    co2Kg: 1.8,
+    co2Kg: 1.7,
     date: '2026-10-14',
-    note: 'Pure vegetarian mess meal'
+    note: 'South Indian vegetarian meals (Idli, Dosa, Sambar Rice)'
   },
   {
     id: 'act_103',
     category: 'transport',
-    subtype: 'auto_cng',
-    label: 'Auto Rickshaw (CNG) from Metro Station to Campus Gate',
-    quantity: 3.5,
+    subtype: 'bus_city',
+    label: 'BMTC Bus Route 210 / 215 (Jayanagar 4th Block to BMSCE Bull Temple)',
+    quantity: 6,
     unit: 'km',
-    co2Kg: 0.377,
+    co2Kg: 0.091,
     date: '2026-10-13',
-    note: 'Shared CNG auto ride'
+    note: 'BMTC Student Bus Pass commute'
   },
   {
     id: 'act_104',
     category: 'transport',
     subtype: 'bicycle',
-    label: 'Cycled inside campus to Central Library',
-    quantity: 3,
+    label: 'Yulu Miracle Electric / Cycle ride across Gandhi Bazaar',
+    quantity: 2.5,
     unit: 'km',
     co2Kg: 0.0,
     date: '2026-10-13',
-    note: 'Campus green cycle sharing'
+    note: 'Active micro-mobility through Basavanagudi'
   },
   {
     id: 'act_105',
-    category: 'shopping',
-    subtype: 'thrift_clothes',
-    label: 'Thrifted Kurta / Denim from Street Fair',
-    quantity: 1,
-    unit: 'item',
-    co2Kg: 0.9,
-    date: '2026-10-12',
-    note: 'Second-hand student flea market'
+    category: 'energy',
+    subtype: 'hostel_room',
+    label: 'BMSCE International/General Hostel Monthly BESCOM Unit Share',
+    quantity: 55,
+    unit: 'kWh',
+    co2Kg: 38.94,
+    date: '2026-10-01',
+    note: 'Study table LED, ceiling fan, and laptop charging (BESCOM grid)'
   },
   {
     id: 'act_106',
-    category: 'energy',
-    subtype: 'hostel_room',
-    label: 'Hostel Room Monthly Electricity Share',
-    quantity: 60,
-    unit: 'kWh',
-    co2Kg: 43.2,
-    date: '2026-10-01',
-    note: 'Fan, LED study lamp, and laptop charging (CEA 0.720 factor)'
+    category: 'shopping',
+    subtype: 'books_photocopy',
+    label: 'VTU Exam Question Banks & Xerox Notes from Gandhi Bazaar Xerox Shop',
+    quantity: 2,
+    unit: 'bundle',
+    co2Kg: 2.0,
+    date: '2026-10-11',
+    note: 'Semester exam prep notes'
   },
   {
     id: 'act_107',
     category: 'waste',
     subtype: 'kabadiwala_recycled',
-    label: 'Semester Raddi & Plastic bottles given to Kabadiwala',
-    quantity: 8,
+    label: 'Given Old Assignments & Newspapers to Local Basavanagudi Gujri Shop',
+    quantity: 7,
     unit: 'kg',
-    co2Kg: 0.48,
+    co2Kg: 0.35,
     date: '2026-10-10',
-    note: 'Responsible paper and can recycling'
+    note: 'Paper recycling scrap diversion'
   }
 ];
 
 export const INITIAL_GOALS = [
   {
     id: 'goal_01',
-    title: 'Commute by Metro or Bus 4 days a week',
+    title: 'Commute to BMSCE exclusively via Namma Metro or BMTC 4 days/week',
     category: 'transport',
     targetValue: 16,
-    currentValue: 12,
+    currentValue: 13,
     unit: 'trips',
     deadline: '2026-10-31',
     status: 'in_progress',
-    co2SavingsKg: 24.5
+    co2SavingsKg: 28.0
   },
   {
     id: 'goal_02',
-    title: 'Pure Desi Veg Mess Meals (Avoid Fast Food Burgers)',
+    title: 'Pure South Indian Veg Meals in Hostel Mess (Avoid Zomato late-night)',
     category: 'food',
     targetValue: 6,
     currentValue: 5,
     unit: 'days',
     deadline: '2026-10-28',
     status: 'in_progress',
-    co2SavingsKg: 12.0
+    co2SavingsKg: 14.5
   },
   {
     id: 'goal_03',
-    title: 'Give all semester exam waste & paper to Kabadiwala',
+    title: 'Sort all BMSCE exam paper scrap to Gujri shop / BBMP Dry Waste Centre',
     category: 'waste',
     targetValue: 10,
     currentValue: 10,
     unit: 'kg',
     deadline: '2026-10-31',
     status: 'achieved',
-    co2SavingsKg: 18.0
+    co2SavingsKg: 16.0
   }
 ];
 
 export const INITIAL_BADGES = [
-  { id: 'b1', name: 'Metro Commuter', desc: 'Used Metro / Train for 10 trips', icon: 'Train', unlocked: true, date: '2026-10-10' },
-  { id: 'b2', name: 'Desi Green Eater', desc: 'Chose nutritious Indian vegetarian thali', icon: 'Salad', unlocked: true, date: '2026-10-12' },
-  { id: 'b3', name: 'Raddi Recycler', desc: 'Sorted recyclables to the Kabadiwala', icon: 'Recycle', unlocked: true, date: '2026-10-12' },
-  { id: 'b4', name: 'Hostel Power Saver', desc: 'Turned off hostel switches before leaving', icon: 'Zap', unlocked: true },
-  { id: 'b5', name: 'Campus Eco Hero', desc: 'Maintained 30 days of footprint tracking', icon: 'Award', unlocked: false }
+  { id: 'b1', name: 'Namma Metro Rider', desc: 'Logged 10 trips on Green/Purple Line', icon: 'Train', unlocked: true, date: '2026-10-10' },
+  { id: 'b2', name: 'Gandhi Bazaar Pedestrian', desc: 'Walked or cycled across Basavanagudi', icon: 'Bike', unlocked: true, date: '2026-10-12' },
+  { id: 'b3', name: 'Namma Gujri Hero', desc: 'Diverted campus raddi scrap to recycling', icon: 'Recycle', unlocked: true, date: '2026-10-12' },
+  { id: 'b4', name: 'BMSCE Energy Saver', desc: 'Maintained low electricity usage in hostel', icon: 'Zap', unlocked: true },
+  { id: 'b5', name: 'Hasiru Bengaluru Champion', desc: 'Maintained 30 days of active climate auditing', icon: 'Award', unlocked: false }
 ];
 
 export function getStoredData(key, fallback) {

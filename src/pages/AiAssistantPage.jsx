@@ -16,8 +16,8 @@ export default function AiAssistantPage() {
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: `Namaste Aarav! I'm your EcoSphere AI Sustainability Coach. I've analyzed your college profile (${baseline.total.toLocaleString()} kg CO₂e). In the Indian university context, your largest impact area is ${highestCategory.toUpperCase()} (~${baseline.breakdown[highestCategory]} kg). How can I help you optimize your metro commute, hostel energy, or mess diet today?`,
-      tags: ['India GHG Program Grounded', 'College Context']
+      text: `Namaskara Chetan! I'm your EcoSphere AI Sustainability Coach for BMSCE (Basavanagudi, Bengaluru). I've analyzed your academic year profile (${baseline.total.toLocaleString()} kg CO₂e). In the South Bengaluru college context, your largest impact area is ${highestCategory.toUpperCase()} (~${baseline.breakdown[highestCategory]} kg). How can I help you optimize your Namma Metro Green Line commute, hostel geyser power, or canteen diet today?`,
+      tags: ['BMSCE Bengaluru', 'Namma Metro', 'BESCOM Grid']
     }
   ]);
 
@@ -49,10 +49,10 @@ export default function AiAssistantPage() {
   };
 
   const samplePrompts = [
-    'How does taking the Delhi/Namma Metro compare to my Activa scooter?',
-    'What are the cheapest hostel electricity saving hacks?',
-    'Why is a traditional Indian vegetarian thali low in carbon?',
-    'How can selling old books to a Kabadiwala help the environment?'
+    'How does taking Namma Metro compare to riding my Activa to BMSCE?',
+    'What are the best hostel electricity saving tips for Bengaluru weather?',
+    'Why is a South Indian mess meal (Idli/Dosa/Rice) low in carbon?',
+    'How can selling old VTU exam notes to a Basavanagudi Gujri shop help?'
   ];
 
   return (
@@ -61,11 +61,11 @@ export default function AiAssistantPage() {
       {/* Header */}
       <div style={{ marginBottom: '2rem' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', color: '#059669', fontSize: '0.8125rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-          <Sparkles size={16} /> Campus Eco Advisor
+          <Sparkles size={16} /> BMSCE Bengaluru Campus Eco Advisor
         </div>
         <h1 style={{ fontSize: '2.25rem', color: '#0f172a' }}>AI Sustainability Assistant</h1>
         <p style={{ fontSize: '0.9375rem', color: '#64748b' }}>
-          Real-time, scientifically grounded lifestyle recommendations tailored for Indian colleges and hostels.
+          Real-time, scientifically grounded lifestyle recommendations tailored for BMSCE students in Basavanagudi and South Bengaluru.
         </p>
       </div>
 
@@ -102,15 +102,15 @@ export default function AiAssistantPage() {
                 <Bot size={20} />
               </div>
               <div>
-                <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#0f172a' }}>EcoSphere Indian Campus Coach</div>
+                <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#0f172a' }}>EcoSphere BMSCE Advisor</div>
                 <div style={{ fontSize: '0.75rem', color: '#059669', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981' }} /> Connected to Aarav's Profile
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981' }} /> Connected to Chetan Rao's Profile
                 </div>
               </div>
             </div>
 
             <span className="badge badge-emerald" style={{ fontSize: '0.7rem' }}>
-              🇮🇳 India GHG Grounded
+              Namma Metro Ready
             </span>
           </div>
 
@@ -197,7 +197,7 @@ export default function AiAssistantPage() {
 
             {isTyping && (
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', color: '#64748b', fontSize: '0.8125rem', marginLeft: '2.75rem' }}>
-                <span className="badge badge-emerald">Analyzing Indian GHG factors...</span>
+                <span className="badge badge-emerald">Analyzing Namma Metro & BESCOM factors...</span>
               </div>
             )}
           </div>
@@ -240,7 +240,7 @@ export default function AiAssistantPage() {
           >
             <input
               type="text"
-              placeholder="Ask about Metro emissions, hostel electricity, or mess food..."
+              placeholder="Ask about Namma Metro Green Line, BMSCE hostel power, or canteen..."
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value)}
               className="form-input"
@@ -261,8 +261,8 @@ export default function AiAssistantPage() {
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
-              <h3 style={{ fontSize: '1.25rem', color: '#0f172a' }}>College Action Plan</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Curated for your highest-impact categories</p>
+              <h3 style={{ fontSize: '1.25rem', color: '#0f172a' }}>BMSCE Action Plan</h3>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Curated for South Bengaluru student routines</p>
             </div>
             <span className="badge badge-emerald">{recommendations.length} Action Items</span>
           </div>

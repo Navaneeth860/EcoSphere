@@ -15,11 +15,11 @@ export function AuthProvider({ children }) {
   const login = (email, password, role = 'student') => {
     const user = {
       id: role === 'admin' ? 'adm_01' : 'usr_01',
-      name: role === 'admin' ? 'Prof. Radhika Iyer (Campus Sustainability Dean)' : 'Aarav Sharma',
-      email: email || (role === 'admin' ? 'sustainability@iitd.ac.in' : 'aarav.sharma@iitd.ac.in'),
+      name: role === 'admin' ? 'Dr. H.S. Jagadeesh (Dean of Campus Development & Sustainability, BMSCE)' : 'Chetan Rao',
+      email: email || (role === 'admin' ? 'sustainability.dean@bmsce.ac.in' : 'chetan.rao.cs23@bmsce.ac.in'),
       role: role,
-      university: 'Indian Institute of Technology (IIT Delhi)',
-      major: role === 'admin' ? 'Dean of Green Campus & Infrastructure' : 'B.Tech in Computer Science & Environmental Systems',
+      university: 'B.M.S. College of Engineering (BMSCE), Basavanagudi, Bengaluru',
+      major: role === 'admin' ? 'Professor & Dean of Green Campus' : 'B.E. Computer Science & Engineering (Batch 2026)',
       joinedDate: '2024-08-01',
       avatarUrl: role === 'admin' 
         ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80'
@@ -36,8 +36,8 @@ export function AuthProvider({ children }) {
       name,
       email,
       role,
-      university: 'Indian Institute of Technology (IIT Delhi)',
-      major: 'First Year Engineering',
+      university: 'B.M.S. College of Engineering (BMSCE), Basavanagudi, Bengaluru',
+      major: 'First Year Engineering (Autonomous)',
       joinedDate: new Date().toISOString().split('T')[0],
       avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
       hasCompletedOnboarding: false

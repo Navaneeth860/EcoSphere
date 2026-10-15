@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { 
   Plus, 
   TrendingDown, 
@@ -54,26 +53,26 @@ export default function DashboardPage() {
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [quickCategory, setQuickCategory] = useState('transport');
   const [quickSubtype, setQuickSubtype] = useState('metro');
-  const [quickGoingKm, setQuickGoingKm] = useState(8.5);
-  const [quickComingKm, setQuickComingKm] = useState(8.5);
-  const [quickQuantity, setQuickQuantity] = useState(17);
+  const [quickGoingKm, setQuickGoingKm] = useState(7.5);
+  const [quickComingKm, setQuickComingKm] = useState(7.5);
+  const [quickQuantity, setQuickQuantity] = useState(15);
   const [quickUnit, setQuickUnit] = useState('km');
   const [quickLabel, setQuickLabel] = useState('');
 
   const pieData = [
-    { name: 'Commute (Metro/Bus/Scooter)', value: baseline.breakdown.transport, color: CATEGORY_COLORS.transport, key: 'transport' },
-    { name: 'Hostel Power (CEA Grid)', value: baseline.breakdown.energy, color: CATEGORY_COLORS.energy, key: 'energy' },
-    { name: 'Mess Diet (Veg/Non-Veg)', value: baseline.breakdown.food, color: CATEGORY_COLORS.food, key: 'food' },
-    { name: 'Clothing & Supplies', value: baseline.breakdown.shopping, color: CATEGORY_COLORS.shopping, key: 'shopping' },
-    { name: 'Kabadiwala & Waste', value: baseline.breakdown.waste, color: CATEGORY_COLORS.waste, key: 'waste' }
+    { name: 'Commute (Namma Metro/BMTC/Activa)', value: baseline.breakdown.transport, color: CATEGORY_COLORS.transport, key: 'transport' },
+    { name: 'Hostel Power (BESCOM Grid)', value: baseline.breakdown.energy, color: CATEGORY_COLORS.energy, key: 'energy' },
+    { name: 'Mess Diet (South Indian Veg/Non-Veg)', value: baseline.breakdown.food, color: CATEGORY_COLORS.food, key: 'food' },
+    { name: 'VTU Notes & Clothes', value: baseline.breakdown.shopping, color: CATEGORY_COLORS.shopping, key: 'shopping' },
+    { name: 'Gujri Shop & BBMP Waste', value: baseline.breakdown.waste, color: CATEGORY_COLORS.waste, key: 'waste' }
   ];
 
   const monthlyTrends = [
-    { month: 'Jun', total: Math.round(baseline.total * 0.075), avg: 155 },
-    { month: 'Jul', total: Math.round(baseline.total * 0.070), avg: 150 },
-    { month: 'Aug', total: Math.round(baseline.total * 0.085), avg: 160 },
-    { month: 'Sep', total: Math.round(baseline.total * 0.090), avg: 165 },
-    { month: 'Oct', total: Math.round(baseline.total * 0.080), avg: 155 },
+    { month: 'Jun', total: Math.round(baseline.total * 0.075), avg: 145 },
+    { month: 'Jul', total: Math.round(baseline.total * 0.070), avg: 140 },
+    { month: 'Aug', total: Math.round(baseline.total * 0.085), avg: 150 },
+    { month: 'Sep', total: Math.round(baseline.total * 0.090), avg: 155 },
+    { month: 'Oct', total: Math.round(baseline.total * 0.080), avg: 145 },
   ];
 
   const handleQuickAddSubmit = (e) => {
@@ -107,14 +106,14 @@ export default function DashboardPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
             <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              🇮🇳 Indian University Student Hub
+              🌿 B.M.S. College of Engineering (BMSCE)
             </span>
           </div>
           <h1 style={{ fontSize: '2.25rem', color: '#0f172a' }}>
-            Namaste, {currentUser?.name?.split(' ')[0] || 'Student'} 👋
+            Namaskara, {currentUser?.name?.split(' ')[0] || 'Student'} 👋
           </h1>
           <p style={{ fontSize: '0.9375rem', color: '#64748b' }}>
-            {currentUser?.university || 'IIT Delhi'} • B.Tech Environmental Systems
+            {currentUser?.university || 'BMSCE Bengaluru'} • Bull Temple Road, Basavanagudi
           </p>
         </div>
 
@@ -123,7 +122,7 @@ export default function DashboardPage() {
             onClick={() => setShowQuickAdd(true)}
             className="btn-primary"
           >
-            <Plus size={18} /> Log Metro / Meal
+            <Plus size={18} /> Log Metro / Canteen
           </button>
           <Link to="/simulator" className="btn-secondary">
             <Sliders size={18} /> What-If Simulator
@@ -148,11 +147,11 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', marginTop: '0.5rem', fontSize: '0.8125rem' }}>
             {benchmark.isLower ? (
               <span style={{ color: '#059669', display: 'flex', alignItems: 'center', fontWeight: 600 }}>
-                <TrendingDown size={14} style={{ marginRight: '2px' }} /> {benchmark.percentDiff}% below Indian avg (1,850 kg)
+                <TrendingDown size={14} style={{ marginRight: '2px' }} /> {benchmark.percentDiff}% below Bengaluru avg (1,750 kg)
               </span>
             ) : (
               <span style={{ color: '#d97706', display: 'flex', alignItems: 'center', fontWeight: 600 }}>
-                <TrendingUp size={14} style={{ marginRight: '2px' }} /> {benchmark.percentDiff}% above Indian avg
+                <TrendingUp size={14} style={{ marginRight: '2px' }} /> {benchmark.percentDiff}% above Bengaluru avg
               </span>
             )}
           </div>
@@ -171,14 +170,14 @@ export default function DashboardPage() {
             {Math.round(baseline.total / 12)} <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>kg / mo</span>
           </div>
           <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.5rem' }}>
-            National target: &lt; 150 kg/mo
+            City target: &lt; 145 kg/mo
           </div>
         </div>
 
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
             <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
-              Peepal / Neem Trees
+              Honge / Neem Trees
             </span>
             <div style={{ padding: '0.375rem', backgroundColor: '#f0fdf4', borderRadius: '0.5rem', color: '#16a34a' }}>
               <TreePine size={18} />
@@ -220,10 +219,10 @@ export default function DashboardPage() {
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Emissions by Lifestyle Category</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Govt of India & India GHG Program (2015) based</p>
+              <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Emissions by Category</h3>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>India GHG Program & BESCOM grid factors</p>
             </div>
-            <span className="badge badge-emerald">Verified MoEFCC</span>
+            <span className="badge badge-emerald">Karnataka Grid</span>
           </div>
 
           <div style={{ height: '260px', width: '100%' }}>
@@ -263,8 +262,8 @@ export default function DashboardPage() {
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Monthly Trajectory vs Indian Peer Benchmark</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Historical trajectory vs national university average</p>
+              <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Monthly Trajectory vs Bengaluru Student Average</h3>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Semester comparison against South Bengaluru benchmark</p>
             </div>
             <span className="badge badge-blue">Trajectory</span>
           </div>
@@ -278,12 +277,12 @@ export default function DashboardPage() {
                 <Tooltip 
                   formatter={(value, name) => [
                     `${value} kg`, 
-                    name === 'total' ? 'Your Footprint' : 'Indian Student Avg'
+                    name === 'total' ? 'Your Footprint' : 'BMSCE Peer Avg'
                   ]}
                   contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
                 />
                 <Bar dataKey="total" fill="#059669" radius={[4, 4, 0, 0]} name="Your Footprint" />
-                <Bar dataKey="avg" fill="#cbd5e1" radius={[4, 4, 0, 0]} name="Indian Student Avg" />
+                <Bar dataKey="avg" fill="#cbd5e1" radius={[4, 4, 0, 0]} name="BMSCE Peer Avg" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -301,7 +300,7 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
               <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Recent Activity Log</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Latest logged trips and mess meals</p>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Latest logged trips and canteen meals</p>
             </div>
             <Link to="/activities" style={{ fontSize: '0.875rem', color: '#059669', fontWeight: 600 }}>
               View All ({activities.length}) →
@@ -364,7 +363,7 @@ export default function DashboardPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <div>
               <h3 style={{ fontSize: '1.15rem', color: '#0f172a' }}>Active Commitments</h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>Campus eco-challenges</p>
+              <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>BMSCE student eco-challenges</p>
             </div>
             <Link to="/goals" style={{ fontSize: '0.875rem', color: '#059669', fontWeight: 600 }}>
               All Goals →
@@ -404,7 +403,7 @@ export default function DashboardPage() {
                 Ask AI Campus Coach
               </div>
               <div style={{ fontSize: '0.75rem', color: '#15803d' }}>
-                Get hostel and metro advice for IIT Delhi / Indian colleges.
+                Get Namma Metro and Basavanagudi advice.
               </div>
             </div>
             <Link to="/ai-assistant" className="btn-primary" style={{ padding: '0.5rem 0.875rem', fontSize: '0.8125rem' }}>
@@ -430,9 +429,9 @@ export default function DashboardPage() {
           padding: '1.5rem'
         }}>
           <div className="card" style={{ maxWidth: '480px', width: '100%', padding: '2rem' }}>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: '#0f172a' }}>Log College Activity</h3>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: '#0f172a' }}>Log BMSCE Activity</h3>
             <p style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '1.5rem' }}>
-              Using India GHG Program (2015) & CEA factors
+              Using India GHG Program (2015) & BESCOM factors
             </p>
 
             <form onSubmit={handleQuickAddSubmit}>
@@ -446,16 +445,16 @@ export default function DashboardPage() {
                     if (cat === 'transport') { setQuickSubtype('metro'); setQuickUnit('km'); }
                     if (cat === 'food') { setQuickSubtype('pure_veg'); setQuickUnit('day'); setQuickQuantity(1); }
                     if (cat === 'energy') { setQuickSubtype('hostel_room'); setQuickUnit('kWh'); setQuickQuantity(15); }
-                    if (cat === 'shopping') { setQuickSubtype('thrift_clothes'); setQuickUnit('item'); setQuickQuantity(1); }
+                    if (cat === 'shopping') { setQuickSubtype('books_photocopy'); setQuickUnit('bundle'); setQuickQuantity(1); }
                     if (cat === 'waste') { setQuickSubtype('kabadiwala_recycled'); setQuickUnit('kg'); setQuickQuantity(2); }
                   }}
                   className="form-select"
                 >
                   <option value="transport">Transportation / Commute</option>
-                  <option value="food">Hostel Mess / Food</option>
+                  <option value="food">Canteen / Hostel Mess</option>
                   <option value="energy">Hostel / PG Electricity</option>
-                  <option value="shopping">Clothing & Textbooks</option>
-                  <option value="waste">Kabadiwala & Recycling</option>
+                  <option value="shopping">VTU Notes & Clothes</option>
+                  <option value="waste">Gujri / Scrap Recycling</option>
                 </select>
               </div>
 
@@ -464,12 +463,12 @@ export default function DashboardPage() {
                   <div className="form-group">
                     <label className="form-label">Transport Mode</label>
                     <select value={quickSubtype} onChange={(e) => setQuickSubtype(e.target.value)} className="form-select">
-                      <option value="metro">Metro Rail (0.0125 kg/pax-km)</option>
-                      <option value="bus_city">City Bus - DTC/BEST (0.0152 kg/pax-km)</option>
-                      <option value="scooter_petrol">Petrol Scooter - Activa (0.0368 kg/km)</option>
-                      <option value="bike_100cc">Bike - Splendor (0.0358 kg/km)</option>
-                      <option value="auto_cng">Auto Rickshaw CNG (0.1077 kg/km)</option>
-                      <option value="bicycle">Bicycle (0 kg/km)</option>
+                      <option value="metro">Namma Metro (0.0125 kg/pax-km)</option>
+                      <option value="bus_city">BMTC City Bus (0.0152 kg/pax-km)</option>
+                      <option value="scooter_petrol">Honda Activa / TVS Jupiter (0.0368 kg/km)</option>
+                      <option value="bike_100cc">Hero Splendor / Platina (0.0358 kg/km)</option>
+                      <option value="auto_cng">Namma Auto Rickshaw (0.1077 kg/km)</option>
+                      <option value="bicycle">Bicycle / Yulu (0 kg/km)</option>
                     </select>
                   </div>
 
@@ -479,7 +478,7 @@ export default function DashboardPage() {
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                       <div>
-                        <label style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>Going (km):</label>
+                        <label style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>Going to BMSCE (km):</label>
                         <input
                           type="number"
                           min="0.1"
@@ -490,7 +489,7 @@ export default function DashboardPage() {
                         />
                       </div>
                       <div>
-                        <label style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>Coming (km):</label>
+                        <label style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>Coming Back (km):</label>
                         <input
                           type="number"
                           min="0.1"
@@ -539,7 +538,7 @@ export default function DashboardPage() {
                 <label className="form-label">Description / Route</label>
                 <input
                   type="text"
-                  placeholder="e.g. Metro ride to campus"
+                  placeholder="e.g. Namma Metro Green Line to National College"
                   value={quickLabel}
                   onChange={(e) => setQuickLabel(e.target.value)}
                   className="form-input"

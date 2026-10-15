@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Plus, 
   TrendingDown, 
@@ -59,20 +60,29 @@ export default function DashboardPage() {
   const [quickUnit, setQuickUnit] = useState('km');
   const [quickLabel, setQuickLabel] = useState('');
 
+  const safeTotal = baseline?.total || 1720;
+  const safeBreakdown = baseline?.breakdown || {
+    transport: 420,
+    energy: 460,
+    food: 620,
+    shopping: 140,
+    waste: 80
+  };
+
   const pieData = [
-    { name: 'Commute (Namma Metro/BMTC/Activa)', value: baseline.breakdown.transport, color: CATEGORY_COLORS.transport, key: 'transport' },
-    { name: 'Hostel Power (BESCOM Grid)', value: baseline.breakdown.energy, color: CATEGORY_COLORS.energy, key: 'energy' },
-    { name: 'Mess Diet (South Indian Veg/Non-Veg)', value: baseline.breakdown.food, color: CATEGORY_COLORS.food, key: 'food' },
-    { name: 'VTU Notes & Clothes', value: baseline.breakdown.shopping, color: CATEGORY_COLORS.shopping, key: 'shopping' },
-    { name: 'Gujri Shop & BBMP Waste', value: baseline.breakdown.waste, color: CATEGORY_COLORS.waste, key: 'waste' }
+    { name: 'Commute (Namma Metro/BMTC/Activa)', value: safeBreakdown.transport || 0, color: CATEGORY_COLORS.transport, key: 'transport' },
+    { name: 'Hostel Power (BESCOM Grid)', value: safeBreakdown.energy || 0, color: CATEGORY_COLORS.energy, key: 'energy' },
+    { name: 'Mess Diet (South Indian Veg/Non-Veg)', value: safeBreakdown.food || 0, color: CATEGORY_COLORS.food, key: 'food' },
+    { name: 'VTU Notes & Clothes', value: safeBreakdown.shopping || 0, color: CATEGORY_COLORS.shopping, key: 'shopping' },
+    { name: 'Gujri Shop & BBMP Waste', value: safeBreakdown.waste || 0, color: CATEGORY_COLORS.waste, key: 'waste' }
   ];
 
   const monthlyTrends = [
-    { month: 'Jun', total: Math.round(baseline.total * 0.075), avg: 145 },
-    { month: 'Jul', total: Math.round(baseline.total * 0.070), avg: 140 },
-    { month: 'Aug', total: Math.round(baseline.total * 0.085), avg: 150 },
-    { month: 'Sep', total: Math.round(baseline.total * 0.090), avg: 155 },
-    { month: 'Oct', total: Math.round(baseline.total * 0.080), avg: 145 },
+    { month: 'Jun', total: Math.round(safeTotal * 0.075), avg: 145 },
+    { month: 'Jul', total: Math.round(safeTotal * 0.070), avg: 140 },
+    { month: 'Aug', total: Math.round(safeTotal * 0.085), avg: 150 },
+    { month: 'Sep', total: Math.round(safeTotal * 0.090), avg: 155 },
+    { month: 'Oct', total: Math.round(safeTotal * 0.080), avg: 145 },
   ];
 
   const handleQuickAddSubmit = (e) => {
@@ -89,7 +99,7 @@ export default function DashboardPage() {
     setQuickLabel('');
   };
 
-  const treesNeeded = getTreeEquivalents(baseline.total);
+  const treesNeeded = getTreeEquivalents(safeTotal);
 
   return (
     <div className="container" style={{ paddingTop: '2.5rem', paddingBottom: '4rem' }}>
@@ -142,16 +152,16 @@ export default function DashboardPage() {
             </div>
           </div>
           <div style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.1 }}>
-            {baseline.total.toLocaleString()} <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>kg CO₂e</span>
+            {safeTotal.toLocaleString()} <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>kg CO₂e</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', marginTop: '0.5rem', fontSize: '0.8125rem' }}>
-            {benchmark.isLower ? (
+            {benchmark?.isLower ? (
               <span style={{ color: '#059669', display: 'flex', alignItems: 'center', fontWeight: 600 }}>
                 <TrendingDown size={14} style={{ marginRight: '2px' }} /> {benchmark.percentDiff}% below Bengaluru avg (1,750 kg)
               </span>
             ) : (
               <span style={{ color: '#d97706', display: 'flex', alignItems: 'center', fontWeight: 600 }}>
-                <TrendingUp size={14} style={{ marginRight: '2px' }} /> {benchmark.percentDiff}% above Bengaluru avg
+                <TrendingUp size={14} style={{ marginRight: '2px' }} /> {benchmark?.percentDiff || 0}% above Bengaluru avg
               </span>
             )}
           </div>
@@ -167,7 +177,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <div style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.1 }}>
-            {Math.round(baseline.total / 12)} <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>kg / mo</span>
+            {Math.round(safeTotal / 12)} <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#64748b' }}>kg / mo</span>
           </div>
           <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.5rem' }}>
             City target: &lt; 145 kg/mo

@@ -379,7 +379,7 @@ export default function OnboardingPage() {
                       flex: 1,
                       padding: '0.625rem',
                       borderRadius: '0.5rem',
-                      border: `1px solid={formData.wasteBagsPerWeek === bags ? '#059669' : '#e2e8f0'}`,
+                      border: formData.wasteBagsPerWeek === bags ? '1px solid #059669' : '1px solid #e2e8f0',
                       backgroundColor: formData.wasteBagsPerWeek === bags ? '#ecfdf5' : '#ffffff',
                       color: formData.wasteBagsPerWeek === bags ? '#059669' : '#475569',
                       fontWeight: 700

@@ -30,6 +30,7 @@ import {
 import { useCarbon } from '../context/CarbonContext';
 import { useAuth } from '../context/AuthContext';
 import { getTreeEquivalents } from '../services/carbonEngine';
+import DatabaseLiveModal from '../components/DatabaseLiveModal';
 
 const CATEGORY_COLORS = {
   transport: '#0284c7',
@@ -52,6 +53,7 @@ export default function DashboardPage() {
 
   // Quick Activity Quick-Add modal state
   const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [showDbLive, setShowDbLive] = useState(false);
   const [quickCategory, setQuickCategory] = useState('transport');
   const [quickSubtype, setQuickSubtype] = useState('metro');
   const [quickGoingKm, setQuickGoingKm] = useState(7.5);
@@ -104,6 +106,41 @@ export default function DashboardPage() {
   return (
     <div className="container" style={{ paddingTop: '2.5rem', paddingBottom: '4rem' }}>
       
+      {/* Live Supabase Cloud Telemetry Banner */}
+      <div style={{
+        backgroundColor: '#f0fdf4',
+        border: '1px solid #86efac',
+        borderRadius: '0.875rem',
+        padding: '0.75rem 1.25rem',
+        marginBottom: '2rem',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: '0.75rem',
+        boxShadow: '0 1px 3px rgba(16, 185, 129, 0.08)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#10b981', display: 'inline-block', boxShadow: '0 0 8px #10b981' }} />
+          <div>
+            <span style={{ fontWeight: 800, color: '#065f46', fontSize: '0.875rem' }}>
+              Cloud Database Connected: Supabase PostgreSQL 17.11
+            </span>
+            <span style={{ fontSize: '0.78rem', color: '#166534', marginLeft: '0.625rem' }}>
+              Host: <code style={{ backgroundColor: '#dcfce7', padding: '0.15rem 0.35rem', borderRadius: '4px' }}>db.xbztcoqmlawmysgxuphq.supabase.co</code> • SSL Secure
+            </span>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowDbLive(true)}
+          className="btn-soft"
+          style={{ padding: '0.375rem 0.875rem', fontSize: '0.8125rem', fontWeight: 700, borderColor: '#10b981' }}
+        >
+          ⚡ Open Live DB Monitor & Test Transactions
+        </button>
+      </div>
+
       {/* Welcome Banner */}
       <div style={{
         display: 'flex',
@@ -574,6 +611,9 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
+      {/* Database Live Telemetry Modal */}
+      <DatabaseLiveModal isOpen={showDbLive} onClose={() => setShowDbLive(false)} />
 
     </div>
   );

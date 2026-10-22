@@ -10,15 +10,18 @@ import {
   ShieldCheck, 
   LogOut, 
   Menu, 
-  X 
+  X,
+  Database
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import DatabaseLiveModal from './DatabaseLiveModal';
 
 export default function Navbar() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dbModalOpen, setDbModalOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -106,7 +109,31 @@ export default function Navbar() {
         </div>
 
         {/* User / Auth Actions */}
-        <div style={{ display: 'none', alignItems: 'center', gap: '1rem' }} className="desktop-auth">
+        <div style={{ display: 'none', alignItems: 'center', gap: '0.875rem' }} className="desktop-auth">
+          {/* Supabase Live DB Trigger Pill */}
+          <button
+            type="button"
+            onClick={() => setDbModalOpen(true)}
+            title="Inspect Live Supabase Cloud PostgreSQL connection & live transactions"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              padding: '0.375rem 0.75rem',
+              borderRadius: '9999px',
+              backgroundColor: '#ecfdf5',
+              border: '1px solid #10b981',
+              color: '#065f46',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              boxShadow: '0 1px 2px rgba(16, 185, 129, 0.15)'
+            }}
+          >
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10b981', display: 'inline-block', boxShadow: '0 0 6px #10b981' }} />
+            Supabase DB Live ⚡
+          </button>
+
           {currentUser ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
@@ -235,8 +262,34 @@ export default function Navbar() {
               </Link>
             </div>
           )}
+
+          <button
+            type="button"
+            onClick={() => { setDbModalOpen(true); setMobileMenuOpen(false); }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.45rem',
+              padding: '0.625rem',
+              borderRadius: '0.5rem',
+              backgroundColor: '#ecfdf5',
+              border: '1px solid #10b981',
+              color: '#065f46',
+              fontSize: '0.8125rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              marginTop: '0.5rem'
+            }}
+          >
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10b981', display: 'inline-block' }} />
+            Open Supabase Cloud Database Telemetry
+          </button>
         </div>
       )}
+
+      {/* Live Database Modal */}
+      <DatabaseLiveModal isOpen={dbModalOpen} onClose={() => setDbModalOpen(false)} />
 
       <style>{`
         @media (min-width: 860px) {

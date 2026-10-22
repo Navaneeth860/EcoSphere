@@ -46,3 +46,4 @@ export const goalSchema = z.object({
   deadline: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Deadline must be YYYY-MM-DD'),
   co2SavingsKg: z.number().min(0).optional()
 });
+

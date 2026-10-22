@@ -1,7 +1,9 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { pool, checkDatabaseHealth } from './db/index.js';
+import { pool, db, checkDatabaseHealth } from './db/index.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { emissionFactors } from './db/schema.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,25 +28,29 @@ async function initDemoTable() {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `);
-
-    // Insert 2 initial demo seed rows if table is empty
-    const countRes = await pool.query('SELECT COUNT(*) FROM demo_activities;');
-    if (parseInt(countRes.rows[0].count, 10) === 0) {
-      await pool.query(`
-        INSERT INTO demo_activities (student_name, action_name, category, co2_kg, source_note)
-        VALUES 
-          ('Chetan Rao (BMSCE)', 'Namma Metro Green Line (Banashankari to National College)', 'transport', 0.188, 'India GHG Program Table 5.4.1'),
-          ('Chetan Rao (BMSCE)', 'South Indian Mess Canteen Lunch & Vidyarthi Bhavan Dosa', 'food', 1.700, 'India Dietary Assessment');
-      `);
-    }
     console.log('✅ Supabase "demo_activities" table verified and ready.');
   } catch (err) {
     console.error('⚠️ Could not initialize demo table:', err.message);
   }
 }
 
+// 0. General Health endpoint
+app.get('/api/health', async (req, res, next) => {
+  try {
+    const health = await checkDatabaseHealth();
+    res.json({
+      success: true,
+      service: 'EcoSphere API Engine',
+      environment: process.env.NODE_ENV || 'development',
+      database: health
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // 1. Live Database Health & Metadata
-app.get('/api/db-status', async (req, res) => {
+app.get('/api/db-status', async (req, res, next) => {
   const start = Date.now();
   try {
     const health = await checkDatabaseHealth();
@@ -55,7 +61,7 @@ app.get('/api/db-status', async (req, res) => {
       success: true,
       status: 'Connected',
       engine: 'PostgreSQL 17.11 (Supabase Cloud)',
-      host: 'db.xbztcoqmlawmysgxuphq.supabase.co',
+      host: 'aws-0-ap-south-1.pooler.supabase.com (IPv4 Pooler)',
       database: health.database,
       serverTime: health.serverTime,
       version: health.version,
@@ -64,16 +70,12 @@ app.get('/api/db-status', async (req, res) => {
       latencyMs: `${latencyMs}ms`
     });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      status: 'Disconnected',
-      error: err.message
-    });
+    next(err);
   }
 });
 
 // 2. Fetch live records directly from Supabase
-app.get('/api/demo-activities', async (req, res) => {
+app.get('/api/demo-activities', async (req, res, next) => {
   try {
     const result = await pool.query(
       'SELECT * FROM demo_activities ORDER BY id DESC LIMIT 20;'
@@ -84,12 +86,12 @@ app.get('/api/demo-activities', async (req, res) => {
       data: result.rows
     });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    next(err);
   }
 });
 
 // 3. Write real live transaction to Supabase
-app.post('/api/demo-activities', async (req, res) => {
+app.post('/api/demo-activities', async (req, res, next) => {
   const { studentName, actionName, category, co2Kg, sourceNote } = req.body;
   try {
     const query = `
@@ -112,9 +114,26 @@ app.post('/api/demo-activities', async (req, res) => {
       row: result.rows[0]
     });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    next(err);
   }
 });
+
+// 4. Fetch official Indian Emission Factors from Supabase
+app.get('/api/emission-factors', async (req, res, next) => {
+  try {
+    const factors = await db.select().from(emissionFactors);
+    res.json({
+      success: true,
+      count: factors.length,
+      data: factors
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Centralized Error Handling Middleware
+app.use(errorHandler);
 
 app.listen(PORT, async () => {
   console.log(`🚀 EcoSphere Express API server running on http://localhost:${PORT}`);

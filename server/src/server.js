@@ -120,3 +120,4 @@ app.listen(PORT, async () => {
   console.log(`🚀 EcoSphere Express API server running on http://localhost:${PORT}`);
   await initDemoTable();
 });
+
